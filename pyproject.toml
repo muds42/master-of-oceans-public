@@ -1,0 +1,37 @@
+[project]
+name = "seabattle"
+version = "0.1.0"
+description = "Master of Oceans: naval tactical battles in the spirit of Master of Orion (1993)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["pygame-ce>=2.4,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+seabattle = "seabattle.__main__:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["seabattle", "seabattle.ui", "seabattle.problems"]
+
+[tool.setuptools.package-data]
+seabattle = ["assets/fonts/*", "assets/icon.*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 400  # long lines are the house style; the linter looks for bugs, not layout
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B"]  # pycodestyle errors and warnings, pyflakes, bugbear
+ignore = [
+    "E741",  # names like l and I: used deliberately in formulas
+    "B905",  # zip() without strict=: the lists are built to match
+]
