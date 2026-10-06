@@ -409,21 +409,24 @@ def test_winning_a_super_mission_says_what_it_opens():
     assert c.mission_number == 21 and c.class_state("hydrofoil") == "unlockable"
 
 
-def test_each_patrol_is_twenty_percent_bigger():
+def test_each_patrol_brings_twenty_percent_more_escorts():
     def hull(m):
         return sum(cm.red_design(cid, m.tech).max_hp * n for cid, n in m.enemy)
 
     # They grow from the Maelstrom and a small escort, not from super mission 30's whole fleet.
     last = cm.Mission(cm.MISSION_COUNT, "", "", cm.PATROL_FLEET, cm.red_tech(cm.MISSION_COUNT))
     assert hull(last) < hull(cm.mission(cm.MISSION_COUNT)) and cm.red_tech(cm.MISSION_COUNT + 1) == last.tech
+    escorts = {cid: n for cid, n in cm.PATROL_FLEET if cid not in RED_SHIPS}
+    assert escorts and dict(cm.PATROL_FLEET)["maelstrom"] == 1
     for extra in range(1, 12):
         m = cm.mission(cm.MISSION_COUNT + extra)
         prev = cm.mission(cm.MISSION_COUNT + extra - 1) if extra > 1 else last
-        assert hull(m) / hull(prev) == pytest.approx(cm.ENDLESS_GROWTH, abs=0.05)
-        assert hull(m) / hull(last) == pytest.approx(cm.ENDLESS_GROWTH ** extra, rel=0.03)
         assert [cid for cid, _ in m.enemy] == [cid for cid, _ in last.enemy]
         assert all(n >= k for (_, n), (_, k) in zip(m.enemy, prev.enemy))  # no stack ever shrinks
-        assert dict(m.enemy)["maelstrom"] == 1
+        assert hull(m) > hull(prev)
+        assert dict(m.enemy)["maelstrom"] == 1  # the super ship stays as it is; the escorts grow
+        for cid, n in escorts.items():
+            assert dict(m.enemy)[cid] == pytest.approx(n * cm.ENDLESS_GROWTH ** extra, abs=0.5)
 
 
 def test_save_and_load_round_trip(save_dir):

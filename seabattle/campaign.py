@@ -217,10 +217,10 @@ _MISSIONS = [
      {"fields": 4, "ion": 2, "plasma_torps": 2, "decoys": 3, "railguns": 2, "point_defense": 2, "graviton": 2}),
 ]
 ACTS = (1, 11, 21)  # the first missions of Act I, Act II and Act III
-# After the last scripted mission, each patrol is 20% bigger than the one before. They grow from the
+# After the last scripted mission, each patrol's escort is 20% bigger than the one before. They grow from the
 # Maelstrom and a small escort, not from the whole fleet of super mission 30.
 ENDLESS_GROWTH = 1.2
-PATROL_FLEET = (("maelstrom", 1), ("destroyer", 2))
+PATROL_FLEET = (("maelstrom", 1), ("destroyer", 8), ("light_cruiser", 2))
 
 
 def red_tech(number: int) -> dict[str, int]:
@@ -239,28 +239,13 @@ def red_design(ship_id: str, tech: dict[str, int]) -> ShipDesign:
     return refit(ship_design(ship_id), tech)
 
 
-def grow_fleet(enemy: list[tuple[str, int]], factor: float, tech: dict[str, int]) -> tuple[tuple[str, int], ...]:
-    """``enemy`` with ``factor`` times the hull points afloat.
+def grow_escorts(enemy: list[tuple[str, int]], factor: float) -> tuple[tuple[str, int], ...]:
+    """``enemy`` with ``factor`` times as many escorts in each stack (rounded); super ships stay as they are.
 
-    Super ships stay as they are and the escorts grow to make up the difference,
-    so the fleet gets steadily bigger instead of jumping by a whole super ship.
-    """
-    hp = [red_design(cid, tech).max_hp * n for cid, n in enemy]
-    escorts = [i for i, (cid, _) in enumerate(enemy) if cid not in RED_SHIPS] or list(range(len(enemy)))
-    fixed = sum(h for i, h in enumerate(hp) if i not in escorts)
-    grown = sum(h for i, h in enumerate(hp) if i in escorts)
-    scale = (sum(hp) * factor - fixed) / grown
-    counts = [n for _, n in enemy]
-    each = {i: hp[i] / counts[i] for i in escorts}
-    want = {i: counts[i] * scale for i in escorts}
-    for i in escorts:
-        counts[i] = int(want[i])
-    room = sum((want[i] - counts[i]) * each[i] for i in escorts)
-    for i in sorted(escorts, key=lambda i: counts[i] - want[i]):  # largest remainder first
-        if room >= each[i] / 2:
-            counts[i] += 1
-            room -= each[i]
-    return tuple((cid, max(1, c)) for (cid, _), c in zip(enemy, counts))
+    The escorts carry most of a fleet's firepower, so they are what grows. Growing the hull
+    instead, with the super ship fixed, would pile all of it on the escorts: a fleet 20% bigger
+    by hull had eight times the escort, and the patrols hit a wall at the third."""
+    return tuple((cid, n if cid in RED_SHIPS else max(n, round(n * factor))) for cid, n in enemy)
 
 
 def mission(number: int) -> Mission:
@@ -271,8 +256,8 @@ def mission(number: int) -> Mission:
     extra = number - len(_MISSIONS)
     tech = red_tech(number)
     return Mission(
-        number, f"Patrol {extra}", "Red keeps rebuilding. Each patrol is 20% bigger than the last.",
-        grow_fleet(list(PATROL_FLEET), ENDLESS_GROWTH ** extra, tech), tech,
+        number, f"Patrol {extra}", "Red keeps rebuilding. Each patrol brings 20% more escorts than the last.",
+        grow_escorts(list(PATROL_FLEET), ENDLESS_GROWTH ** extra), tech,
     )
 
 
