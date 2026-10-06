@@ -23,6 +23,7 @@ Baseline: **8.3 / 7.8 / 6.7 / 6.9 / 3.3 / 1.9 → 6.5**
 | # | Change | Scores before → after | Kept? | Next idea |
 | --- | --- | --- | --- | --- |
 | 1 | Act II tail: escorts for missions 15-19 (Leviathan + 2 light cruisers + 4 destroyers; twin dreadnoughts + 5 destroyers; a bigger swarm; + 4 destroyers in the straits; 2 battleships, 2 cruisers, 4 destroyers at the harbor). The Kraken loses its 2 destroyers so the act finale stays ~40% | 8.3/7.8/6.7/6.9/3.3/1.9 → 8.3/**8.8**/6.7/6.7/3.2/0.0 (6.5 → 6.5) | kept | Endgame's drop is the Maelstrom wall's knock-on (players stuck at 30 reach the patrols crippled). Next: shipyard prices before Act III, since they move the player's strength |
+| 2 | Shipyard prices, from equal-cost battles against real Red fleets: Missile Cruiser 900 → 430 (unlock 500 → 300 blueprints), Light Cruiser 360 → 290, Aegis Cruiser 580 → 360 (unlock 300 → 200 plasma), Hydrofoil Raider 100 → 75 (unlock 150 → 100). Before, the Missile Cruiser won 8% where the same money in destroyers won 95% (mission 11), and the Aegis 0-7% | 8.3/8.8/6.7/6.7/3.2/0.0 → same, bit for bit (6.5 → 6.5) | kept | The modeled player never considers these classes (see Rubric concerns), so the rubric can't see it; the duels can: Missile Cruiser 8% → 100% at mission 11, Light Cruiser 15% → 98% at mission 14. Next: Act III |
 
 ## Rubric concerns
 
@@ -34,8 +35,13 @@ Baseline: **8.3 / 7.8 / 6.7 / 6.9 / 3.3 / 1.9 → 6.5**
   what it buys now. Re-snapshot after changing the missions ahead of the one being probed.
 
 * The modeled player judges purchases with a Lanchester estimate (damage x hull per stack), which
-  favours deepening a stack it already has over starting a new class. "Never bought" is partly
-  that bias, not only bad value. The choices criterion is weighted 1 for that reason.
+  favours deepening a stack it already has over starting a new class. Worse (found in iteration 2):
+  each Red stack is scored against its *best* Blue target, so adding any softer stack (a cruiser
+  beside battleships with a belt of 6) raises Red's estimated strength. At mission 20 a Light
+  Cruiser scores below zero whatever it costs. So the choices criterion mostly measures the model,
+  not the shipyard; it stays weighted 1 and is used as is. A fairer judge (each Red stack's fire
+  split across the Blue stacks it can reach, as the AI's own danger estimate does) is for the user
+  to decide on, since it changes the instrument.
 * The fleet-lost bands were set from the baseline (setup, before iteration 1): Act I's corvette
   swarms lose much more hull per win than later fleets of big ships, whose damage that doesn't
   sink a ship costs nothing.
