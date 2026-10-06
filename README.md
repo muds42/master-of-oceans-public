@@ -388,7 +388,7 @@ opens the next:
   | Leviathan Mk II | over twice a battleship's, with a force field | eight missile launchers, eight 12-inch and eight 6-inch guns |
   | Maelstrom | five times a battleship's, with a force field | twelve 16-inch guns, eight missile launchers, sixteen 6-inch guns and Red's lasers |
 * **Patrols** follow: the Maelstrom with a growing escort of destroyers and light cruisers. The first
-  brings 20% more escorts than a screen of eight destroyers and two light cruisers, and each one after
+  brings 20% more escorts than a screen of ten destroyers and three light cruisers, and each one after
   brings 20% more than the last; the Maelstrom itself stays one ship.
 
 Red's upgrades are part of each mission: every mission lists what Red has

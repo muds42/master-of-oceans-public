@@ -198,22 +198,22 @@ _MISSIONS = [
     ("Salvage Rights", "The Kraken's escorts are back to claim its wreck, and whatever Red was building inside it.",
      [("battleship", 3), ("missile_cruiser", 5), ("light_cruiser", 4), ("destroyer", 9)], {}),
     ("Strange Lights", "Red destroyers now carry laser cannons. Lasers burn straight through armor belts.",
-     [("destroyer", 26), ("light_cruiser", 6)], {"lasers": 1}),
+     [("destroyer", 24), ("light_cruiser", 6)], {"lasers": 1}),
     ("The Shimmer", "Red cruisers shimmer behind force fields that refill every turn. Hit one ship with "
      "everything at once, or send torpedoes under the fields.",
      [("light_cruiser", 10), ("destroyer", 14)], {"fields": 1}),
     ("Ghost Fleet", "Red's missile cruisers hide among holograms: some of your shots will hit nothing at all.",
      [("missile_cruiser", 5), ("destroyer", 13), ("torpedo_boat", 19)], {"decoys": 1, "lasers": 2}),
     ("Plasma Run", "Swarms of torpedo boats armed with plasma torpedoes. Plasma fades as it runs: keep your distance.",
-     [("torpedo_boat", 22), ("torpedo_boat", 22), ("destroyer", 11)], {"plasma_torps": 1}),
+     [("torpedo_boat", 19), ("torpedo_boat", 19), ("destroyer", 10)], {"plasma_torps": 1}),
     ("The Tempest", "The Tempest, a laser super ship, leads the attack. Ion beams drain force fields fast.",
      [("tempest", 1), ("battleship", 1), ("light_cruiser", 4), ("destroyer", 8)], {"fields": 2, "ion": 1}),
     ("Rail Line", "Red battleships with railguns: their shells go through half of any armor belt.",
-     [("battleship", 3), ("missile_cruiser", 3), ("destroyer", 8)], {"railguns": 1, "point_defense": 1}),
+     [("battleship", 3), ("missile_cruiser", 3), ("destroyer", 6)], {"railguns": 1, "point_defense": 1}),
     ("Graviton Storm", "Graviton beams carry their overkill from ship to ship. Big stacks of small boats suffer most.",
-     [("leviathan_mk2", 1), ("destroyer", 9), ("torpedo_boat", 13), ("light_cruiser", 2)], {"graviton": 1, "lasers": 3}),
+     [("leviathan_mk2", 1), ("destroyer", 8), ("torpedo_boat", 12), ("light_cruiser", 2)], {"graviton": 1, "lasers": 3}),
     ("The Gauntlet", "The Tempest and a Leviathan Mk II together, with every trick Red has learned.",
-     [("tempest", 1), ("leviathan_mk2", 1), ("destroyer", 6), ("light_cruiser", 2)], {"fields": 3, "decoys": 2}),
+     [("tempest", 1), ("leviathan_mk2", 1), ("destroyer", 5), ("light_cruiser", 1)], {"fields": 3, "decoys": 2}),
     ("The Maelstrom", "The Maelstrom, a sea fortress armed with everything Red knows, comes for you with two "
      "Leviathan Mk IIs and a screen of destroyers. Win this and the sea is yours.",
      [("maelstrom", 1), ("leviathan_mk2", 2), ("destroyer", 6)],
@@ -223,7 +223,7 @@ ACTS = (1, 11, 21)  # the first missions of Act I, Act II and Act III
 # After the last scripted mission, each patrol's escort is 20% bigger than the one before. They grow from the
 # Maelstrom and a small escort, not from the whole fleet of super mission 30.
 ENDLESS_GROWTH = 1.2
-PATROL_FLEET = (("maelstrom", 1), ("destroyer", 8), ("light_cruiser", 2))
+PATROL_FLEET = (("maelstrom", 1), ("destroyer", 10), ("light_cruiser", 3))
 
 
 def red_tech(number: int) -> dict[str, int]:
