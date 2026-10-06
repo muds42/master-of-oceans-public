@@ -418,12 +418,14 @@ def test_half_the_red_ships_a_lost_battle_sinks_stay_sunk_for_the_next_try(save_
     assert report.red_gone == 3 and any("3 of the Red ships you sank stay sunk" in line for line in report.lines())
     assert [n for _, n in c.red_fleet()] == [5, 6, 2]  # half of 5, 2 and 1, rounded down
     assert [start for _, start, _, _ in c.build_battle().summary()[1]] == [5, 6, 2]
-    c.apply_result(_lost(c, [5, 6, 2]))  # half of a squadron sunk to the last ship comes back: it never runs out
-    assert [n for _, n in c.red_fleet()] == [3, 3, 1]
+    c.apply_result(_lost(c, [5, 6, 2]))  # no squadron drops below half its full strength
+    assert [n for _, n in c.red_fleet()] == [4, 4, 1]
     cm.save(c)
     assert cm.load(1).red_fleet() == c.red_fleet()
     assert c.build_battle(skirmish=3).summary()[1] == [(d, n, n, "active") for d, n in
                                                      [("Torpedo Boat", 9), ("Picket Boat", 4)]]  # skirmishes don't change
+    c.apply_result(_lost(c, [4, 4, 1]))  # however often the player withdraws early, half the fleet is still there
+    assert [n for _, n in c.red_fleet()] == [4, 4, 1]
     other = cm.Campaign.from_dict(dict(c.to_dict(), mission=9))  # a record for another mission is ignored
     assert other.red_fleet() == list(other.mission.enemy)
     win = c.build_battle()
@@ -433,6 +435,27 @@ def test_half_the_red_ships_a_lost_battle_sinks_stay_sunk_for_the_next_try(save_
     win.over, win.winner = True, 0
     c.apply_result(win)
     assert c.mission_number == 9 and c.red_fleet() == list(c.mission.enemy) and not c.red_worn
+
+
+def test_withdrawing_before_the_fight_costs_anything_wears_nothing_down():
+    c = rich(mission_number=8, fleet={"picket": 6})
+    for _ in range(10):  # sink two of each squadron, then pull out with the whole fleet afloat
+        battle = c.build_battle()
+        for s in battle.stacks.values():
+            if s.side == 1:
+                s.count -= min(2, s.count - 1)
+            else:
+                s.status = "retreated"
+        battle.over, battle.winner = True, 1
+        assert c.apply_result(battle).outcome == "withdrew"
+    assert c.red_fleet() == list(c.mission.enemy) and c.attempts == 10
+
+
+def test_red_super_ships_are_always_repaired_for_the_next_try():
+    c = rich(mission_number=16, fleet={"battleship": 4})
+    assert list(c.mission.enemy) == [("dreadnought", 2), ("destroyer", 5)]
+    report = c.apply_result(_lost(c, [2, 4]))
+    assert c.red_fleet() == [("dreadnought", 2), ("destroyer", 3)] and report.red_gone == 2
 
 
 def test_winning_a_super_mission_says_what_it_opens():

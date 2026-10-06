@@ -88,9 +88,11 @@ SUPER_PRIZE = 2  # a super mission pays this many times the prize money
 # Share of the ships sunk (rounded down) that the dockyards repair for free: after a super mission, win or lose,
 # and after any lost or abandoned mission, so one defeat doesn't leave the fleet too weak to win the retry.
 DOCKYARD_REPAIRED = 0.5
-# Red's dockyards are no faster: of the Red ships a lost battle sinks, this share (rounded down) stays sunk for
-# the next try at that mission. Each Red squadron keeps at least one ship, so a super ship is always there.
+# Red's dockyards are no faster: of the Red escorts a lost battle sinks, this share (rounded down) stays sunk for
+# the next try at that mission. A squadron never drops below this share of its full strength (rounded up), so
+# withdrawing early again and again can't grind a mission down to nothing, and super ships are always repaired.
 RED_STAY_SUNK = 0.5
+RED_WEAR_COST = 0.25  # ...and only after a real fight: one that cost the player this share of its fleet's hull
 
 
 @dataclass(frozen=True)
@@ -209,11 +211,11 @@ _MISSIONS = [
     ("The Tempest", "The Tempest, a laser super ship, leads the attack. Ion beams drain force fields fast.",
      [("tempest", 1), ("battleship", 1), ("light_cruiser", 4), ("destroyer", 8)], {"fields": 2, "ion": 1}),
     ("Rail Line", "Red battleships with railguns: their shells go through half of any armor belt.",
-     [("battleship", 3), ("missile_cruiser", 3), ("destroyer", 6)], {"railguns": 1, "point_defense": 1}),
+     [("battleship", 2), ("missile_cruiser", 3), ("destroyer", 6)], {"railguns": 1, "point_defense": 1}),
     ("Graviton Storm", "Graviton beams carry their overkill from ship to ship. Big stacks of small boats suffer most.",
      [("leviathan_mk2", 1), ("destroyer", 8), ("torpedo_boat", 12), ("light_cruiser", 2)], {"graviton": 1, "lasers": 3}),
     ("The Gauntlet", "The Tempest and a Leviathan Mk II together, with every trick Red has learned.",
-     [("tempest", 1), ("leviathan_mk2", 1), ("destroyer", 5), ("light_cruiser", 1)], {"fields": 3, "decoys": 2}),
+     [("tempest", 1), ("leviathan_mk2", 1), ("destroyer", 4)], {"fields": 3, "decoys": 2}),
     ("The Maelstrom", "The Maelstrom, a sea fortress armed with everything Red knows, comes for you with two "
      "Leviathan Mk IIs and a screen of destroyers. Win this and the sea is yours.",
      [("maelstrom", 1), ("leviathan_mk2", 2), ("destroyer", 6)],
@@ -653,19 +655,30 @@ class Campaign:
         return list(ships) if ships and len(ships) == len(self.mission.enemy) else [0] * len(self.mission.enemy)
 
     def red_fleet(self) -> list[tuple[str, int]]:
-        """The coming mission's Red fleet, less the ships earlier lost tries sank for good: half of what each
-        lost battle sank (rounded down) stays sunk. Every squadron keeps at least one ship."""
-        return [(cid, max(1, n - gone)) for (cid, n), gone in zip(self.mission.enemy, self._worn())]
+        """The coming mission's Red fleet, less the escorts earlier lost tries sank for good: half of what each
+        lost battle sank (rounded down) stays sunk, down to half the squadron's strength (rounded up)."""
+        return [(cid, n - min(gone, self._most_worn(cid, n))) for (cid, n), gone in zip(self.mission.enemy, self._worn())]
+
+    @staticmethod
+    def _most_worn(cid: str, n: int) -> int:
+        """How many ships a squadron of ``n`` can be short at most: none for super ships."""
+        return 0 if cid in RED_SHIPS else n - math.ceil(n * (1 - RED_STAY_SUNK))
 
     def _wear_red(self, battle: Battle) -> int:
-        """After a lost try, keep half the Red ships it sank (rounded down) out of the next try.
-        Returns how many that is."""
+        """After a lost try that cost the player a quarter of its fleet's hull or more, keep half the Red
+        escorts it sank (rounded down) out of the next try. Returns how many that is."""
         red = sorted((s for s in battle.stacks.values() if s.side == 1), key=lambda s: s.id)
         before = self.red_fleet()
         if [s.start_count for s in red] != [n for _, n in before]:
             return 0  # not this mission's fleet
+        blue = [s for s in battle.stacks.values() if s.side == 0]
+        lost = sum((s.start_count - max(0, s.count)) * s.design.max_hp for s in blue)
+        if lost < RED_WEAR_COST * sum(s.start_count * s.design.max_hp for s in blue):
+            return 0  # a withdrawal before the fight cost anything: Red's dockyards keep up
         stay = [math.floor((s.start_count - max(0, s.count)) * RED_STAY_SUNK) for s in red]
-        self.red_worn = {"mission": self.mission_number, "ships": [w + k for w, k in zip(self._worn(), stay)]}
+        most = [self._most_worn(cid, n) for cid, n in self.mission.enemy]
+        self.red_worn = {"mission": self.mission_number,
+                         "ships": [min(w + k, cap) for w, k, cap in zip(self._worn(), stay, most)]}
         return sum(n for _, n in before) - sum(n for _, n in self.red_fleet())
 
     def build_battle(self, skirmish: Optional[int] = None) -> Battle:

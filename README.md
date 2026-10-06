@@ -410,11 +410,14 @@ Saves from before Act III that were already on patrols pick up at mission 21.
   super mission, so one defeat doesn't leave your fleet too weak for the retry.
   The rest come home as wrecks: repair, upgrade and try again. The map is
   different each time.
-* **Red's dockyards are no faster than yours.** Of the Red ships a lost battle
-  sinks, half (rounded down, squadron by squadron) stay sunk for your next try
-  at that mission, so every try wears Red down. The briefing and the Fleet page
-  show how many are still sunk. Winning the mission ends it; skirmishes always
-  bring Red's full fleet.
+* **Red's dockyards are no faster than yours.** Of the Red escorts a lost
+  battle sinks, half (rounded down, squadron by squadron) stay sunk for your
+  next try at that mission, so every hard-fought try wears Red down: it counts
+  once the battle has sunk a quarter of your own fleet's hull, never takes a
+  squadron below half its strength (rounded up), and Red's super ships are
+  always repaired. The
+  briefing and the Fleet page show how many are still sunk. Winning the mission
+  ends it; skirmishes always bring Red's full fleet.
 
 ### Math Boost
 
