@@ -17,9 +17,9 @@ problems between missions the player wins most missions at the first try
 about 85% of the time or better, and the set pieces (the Dreadnought, Twin
 Dreadnoughts, the Tempest, the Gauntlet) about 75%. The super missions (10, 20
 and 30) aim much lower: with 30 problems before them, about 40% at the first
-try and two or three tries in all, the Maelstrom a little harder. A player
-strong enough to win a super mission comes out of it strong, so the missions
-just after one come in easier than their targets, Act III's most of all.
+try and two or three tries in all, the Maelstrom a little harder. A "lost"
+column shows the share of the fleet's hull each first-try battle sank: a
+mission won at the first try every time can still be a hard fight, or a parade.
 
 With ``--boost`` the player fights with Math Boost on (see ``boost.py``) and
 answers that share of its problems right; a column then shows how many
@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import json
 import math
 import os
 import random
@@ -195,6 +196,7 @@ def _best(c: cm.Campaign) -> Optional[Purchase]:
 
 
 def _buy(c: cm.Campaign, p: Purchase) -> None:
+    c._count("model_bought", p.key)
     if p.kind == "upgrade":
         error = c.buy_upgrade(p.key)
     elif p.kind == "retrofit":
@@ -272,10 +274,17 @@ def fight(c: cm.Campaign, player: Optional[Player] = None) -> tuple[Battle, int]
     return battle, boost.posed
 
 
+def fleet_lost(battle: Battle) -> float:
+    """Share of Blue's hull at the start of the battle that was sunk: 0 for a walkover, 1 for a rout."""
+    blue = [s for s in battle.stacks.values() if s.side == 0]
+    start = sum(s.start_count * s.design.max_hp for s in blue)
+    return sum((s.start_count - max(0, s.count)) * s.design.max_hp for s in blue) / max(start, 1)
+
+
 def _first_try_wins(c: cm.Campaign, samples: int, player: Optional[Player] = None,
-                    boosts: Optional[list[int]] = None) -> int:
+                    boosts: Optional[list[int]] = None, lost: Optional[list[float]] = None) -> int:
     """Wins in ``samples`` extra first-try battles on other maps, the campaign itself left as it is.
-    Each battle's Math Boost count goes in ``boosts``."""
+    Each battle's Math Boost count goes in ``boosts``, and the share of the fleet it lost in ``lost``."""
     wins = 0
     for k in range(samples):
         trial = copy.deepcopy(c)
@@ -284,6 +293,8 @@ def _first_try_wins(c: cm.Campaign, samples: int, player: Optional[Player] = Non
         wins += battle.winner == 0
         if boosts is not None:
             boosts.append(n)
+        if lost is not None:
+            lost.append(fleet_lost(battle))
     return wins
 
 
@@ -293,20 +304,24 @@ def _new_player(index: int, seed: int) -> tuple[cm.Campaign, random.Random]:
 
 
 def _play(c: cm.Campaign, player: Player, rng: random.Random, last: int, samples: int,
-          first: dict[int, float], tries: dict[int, int], boosts: Optional[dict[int, list[int]]] = None) -> None:
+          first: dict[int, float], tries: dict[int, int], boosts: Optional[dict[int, list[int]]] = None,
+          losses: Optional[dict[int, float]] = None) -> None:
     """Play from the campaign's next mission to mission ``last``, recording each one's first-try chance and tries,
-    and the Math Boosts in its first-try battles."""
+    the Math Boosts in its first-try battles and the share of the fleet those battles lost."""
     while c.mission_number <= last:
         n = c.mission_number
         for attempt in range(1, MAX_TRIES + 1):
             workshop(c, player, rng)
             counts: list[int] = []
-            wins = _first_try_wins(c, samples, player, counts) if attempt == 1 else 0
+            lost: list[float] = []
+            wins = _first_try_wins(c, samples, player, counts, lost) if attempt == 1 else 0
             battle, count = fight(c, player)
             if attempt == 1:
                 first[n] = (wins + (battle.winner == 0)) / (samples + 1)
                 if boosts is not None:
                     boosts[n] = counts + [count]
+                if losses is not None:
+                    losses[n] = (sum(lost) + fleet_lost(battle)) / (samples + 1)
             c.apply_result(battle)
             if battle.winner == 0:
                 tries[n] = attempt
@@ -319,12 +334,23 @@ def _play(c: cm.Campaign, player: Player, rng: random.Random, last: int, samples
 def play_campaign(player: Player, index: int, seed: int, last: int, samples: int) -> tuple[dict, dict, dict]:
     """One modeled player's campaign up to mission ``last``: ({mission: first-try chance}, {mission: tries},
     {mission: Math Boosts in each first-try battle})."""
+    r = play_campaign_record(player, index, seed, last, samples)
+    return r["first"], r["tries"], r["boosts"]
+
+
+def play_campaign_record(player: Player, index: int, seed: int, last: int, samples: int) -> dict:
+    """:func:`play_campaign`, plus each mission's share of the fleet lost in its first-try battles ("losses"),
+    everything the player bought ("bought": upgrade track, ship class or class/retrofit -> how many) and the
+    currency it was left holding ("bank")."""
     c, rng = _new_player(index, seed)
     first: dict[int, float] = {}
     tries: dict[int, int] = {}
     boosts: dict[int, list[int]] = {}
-    _play(c, player, rng, last, samples, first, tries, boosts)
-    return first, tries, boosts
+    losses: dict[int, float] = {}
+    _play(c, player, rng, last, samples, first, tries, boosts, losses)
+    return {"first": first, "tries": tries, "boosts": boosts, "losses": losses,
+            "bought": dict(c.stats.get("model_bought", {})), "bank": dict(c.currency),
+            "earned": dict(c.stats.get("earned", {}))}
 
 
 @contextmanager
@@ -397,6 +423,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--mission", type=int, help="play up to this mission, then try each --fleet there")
     parser.add_argument("--fleet", type=parse_fleet, action="append", default=[],
                         help="a Red fleet to try at --mission, e.g. dreadnought:1,destroyer:2 (repeatable)")
+    parser.add_argument("--json", metavar="PATH", help="also write every player's record to this JSON file")
     args = parser.parse_args(argv)
     player = Player(args.problems, args.accuracy, args.difficulty, args.boost)
     boost = f" Math Boost on, {player.boost:.0%} right." if player.boost is not None else ""
@@ -416,21 +443,26 @@ def main(argv: Optional[list[str]] = None) -> int:
             print(f"  {rate:4.0%}  " + ", ".join(f"{cid} {count}" for cid, count in fleet))
         return 0
 
-    results = _map(play_campaign, [(player, i, args.seed, args.last, args.samples) for i in range(args.players)],
-                   args.jobs)
-    print(f"  #  {'Mission':24} first try  tries" + ("  boosts" if boost else ""))
+    records = _map(play_campaign_record, [(player, i, args.seed, args.last, args.samples)
+                                          for i in range(args.players)], args.jobs)
+    if args.json:
+        with open(args.json, "w", encoding="utf-8") as f:
+            json.dump({"seed": args.seed, "players": records}, f)
+    print(f"  #  {'Mission':24} first try  tries   lost" + ("  boosts" if boost else ""))
     total = 0.0
     for n in range(1, args.last + 1):
         m = cm.mission(n)
-        first = [r[0][n] for r in results if n in r[0]]
-        tries = [r[1][n] for r in results if n in r[1]]
+        first = [r["first"][n] for r in records if n in r["first"]]
+        tries = [r["tries"][n] for r in records if n in r["tries"]]
+        lost = [r["losses"][n] for r in records if n in r["losses"]]
         mean = sum(tries) / len(tries)
         total += mean * player.problems_before(m)
-        counts = [k for r in results for k in r[2].get(n, [])]
+        counts = [k for r in records for k in r["boosts"].get(n, [])]
         extra = f"  {sum(counts) / len(counts):6.1f}" if boost and counts else ""
         name = m.name + (" (super)" if m.is_super else "")
-        print(f"{n:3}  {name:24} {sum(first) / len(first):8.0%} {mean:6.2f}{extra}")
-    print(f"About {total / args.last:.0f} problems per mission won, missions 1-{args.last}.")
+        print(f"{n:3}  {name:24} {sum(first) / len(first):8.0%} {mean:6.2f} {sum(lost) / len(lost):6.0%}{extra}")
+    print(f"About {total / args.last:.0f} problems per mission won, missions 1-{args.last}. "
+          "Lost: the share of the fleet's hull sunk in a first-try battle.")
     return 0
 
 

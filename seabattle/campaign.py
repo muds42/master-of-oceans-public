@@ -4,8 +4,10 @@ Between missions you are in the workshop: solve math problems to earn
 currency, then spend it on fleet upgrades, new ships and repairs. Ships sunk
 in battle are not gone for good. They are towed home as wrecks that can be
 repaired. A lost or abandoned mission can simply be tried again, so progress
-is never lost; only the repair bill grows. Missions already won can be
-replayed as skirmishes: practice battles with a small prize and no repair bill.
+is never lost, and the dockyards repair half the ships it sank for free: the
+repair bill grows, but one defeat doesn't leave the fleet too weak to retry.
+Missions already won can be replayed as skirmishes: practice battles with a
+small prize and no repair bill.
 
 The campaign has three acts of ten missions. Winning mission 10 ends Act I
 and opens Plasma: a fifth currency with two math topics of its own, spent in
@@ -83,7 +85,14 @@ SUPER_REWARDS = {
 }
 SUPER_MISSIONS = tuple(SUPER_REWARDS)
 SUPER_PRIZE = 2  # a super mission pays this many times the prize money
-SUPER_REPAIRED = 0.5  # share of the ships a super mission sinks (rounded down) that the dockyards repair for free
+# Share of the ships sunk (rounded down) that the dockyards repair for free: after a super mission, win or lose,
+# and after any lost or abandoned mission, so one defeat doesn't leave the fleet too weak to win the retry.
+DOCKYARD_REPAIRED = 0.5
+# Red's dockyards are no faster: of the Red escorts a lost battle sinks, this share (rounded down) stays sunk for
+# the next try at that mission. A squadron never drops below this share of its full strength (rounded up), so
+# withdrawing early again and again can't grind a mission down to nothing, and super ships are always repaired.
+RED_STAY_SUNK = 0.5
+RED_WEAR_COST = 0.25  # ...and only after a real fight: one that cost the player this share of its fleet's hull
 
 
 @dataclass(frozen=True)
@@ -152,9 +161,9 @@ _MISSIONS = [
     ("Cruiser Sighted", "Red light cruisers lead this squadron. Their 6-inch guns outrange yours.",
      [("light_cruiser", 2), ("destroyer", 4), ("picket", 7)], {}),
     ("The Iron Wall", "Red's ships now carry thicker armor. Light guns will bounce off.",
-     [("light_cruiser", 2), ("destroyer", 6)], {"belt": 1, "armor": 1}),
+     [("light_cruiser", 2), ("destroyer", 5)], {"belt": 1, "armor": 1}),
     ("Wolf Pack", "Two packs of torpedo boats with bigger warheads. Keep your distance, or shoot them down.",
-     [("torpedo_boat", 7), ("torpedo_boat", 7), ("destroyer", 2)], {"warheads": 1, "tubes": 1}),
+     [("torpedo_boat", 6), ("torpedo_boat", 6), ("destroyer", 2)], {"warheads": 1, "tubes": 1}),
     ("Battleship!", "A Red battleship has left port. Its 12-inch guns can sink anything you own.",
      [("battleship", 1), ("destroyer", 3)], {"fire_control": 1}),
     ("Cruiser Squadron", "Red's whole cruiser squadron is hunting your fleet: three light cruisers, with destroyers "
@@ -162,7 +171,7 @@ _MISSIONS = [
      [("light_cruiser", 3), ("destroyer", 6), ("picket", 6)], {"caliber": 1}),
     # Act II: Plasma and the player's Future Tech.
     ("The Missile Age", "Red has built missile cruisers. Their missiles strike from across the map.",
-     [("missile_cruiser", 2), ("destroyer", 3)], {"interdiction": 1}),
+     [("missile_cruiser", 2), ("destroyer", 3), ("torpedo_boat", 2)], {"interdiction": 1}),
     ("The Flagship", "Red's flagship puts to sea with its destroyer escort. Sink it, and Red will open its "
      "secret shipyards.",
      [("battleship", 1), ("destroyer", 2)], {}),
@@ -172,49 +181,52 @@ _MISSIONS = [
     ("Hunter-Killers", "Missile cruisers and torpedo boats hunt in packs, striking from long range.",
      [("missile_cruiser", 2), ("torpedo_boat", 6), ("destroyer", 4)], {}),
     ("Leviathan Rising", "The Leviathan, a missile battlecruiser as fast as your cruisers, leads the attack.",
-     [("leviathan", 1), ("destroyer", 2)], {}),
-    ("Twin Dreadnoughts", "Two dreadnoughts steam side by side. They don't think they need an escort.",
-     [("dreadnought", 2)], {}),
+     [("leviathan", 1), ("light_cruiser", 2), ("destroyer", 4)], {}),
+    ("Twin Dreadnoughts", "Two dreadnoughts steam side by side, with a screen of destroyers to keep your torpedo "
+     "boats off them.",
+     [("dreadnought", 2), ("destroyer", 5)], {}),
     ("The Swarm", "Red floods the sea with small boats around a Leviathan. Every torpedo counts.",
-     [("leviathan", 1), ("torpedo_boat", 4), ("torpedo_boat", 4), ("destroyer", 2), ("picket", 4)],
+     [("leviathan", 1), ("torpedo_boat", 9), ("torpedo_boat", 9), ("destroyer", 4), ("picket", 8)],
      {"warheads": 2, "armor": 2}),
     ("Battle of the Straits", "A dreadnought and a Leviathan force the straits together.",
-     [("dreadnought", 1), ("leviathan", 1)], {"caliber": 2, "turrets": 1}),
-    ("Siege of Red Harbor", "You have reached Red's home harbor. A Leviathan and a battleship guard the entrance.",
-     [("leviathan", 1), ("battleship", 1), ("destroyer", 2)], {}),
-    ("The Kraken", "The Kraken, Red's floating fortress, sails out with its last dreadnought, its last Leviathan "
-     "and every destroyer Red has left. Sink it, and its wreck may hold Red's last secrets.",
-     [("kraken", 1), ("dreadnought", 1), ("leviathan", 1), ("destroyer", 2)], {"belt": 2, "fire_control": 2, "interdiction": 2}),
+     [("dreadnought", 1), ("leviathan", 1), ("destroyer", 4)], {"caliber": 2, "turrets": 1}),
+    ("Siege of Red Harbor", "You have reached Red's home harbor. A Leviathan and two battleships guard the entrance, "
+     "with every cruiser and destroyer in port.",
+     [("leviathan", 1), ("battleship", 2), ("light_cruiser", 2), ("destroyer", 4)], {}),
+    ("The Kraken", "The Kraken, Red's floating fortress, sails out with its last dreadnought and its last "
+     "Leviathan. Sink it, and its wreck may hold Red's last secrets.",
+     [("kraken", 1), ("dreadnought", 1), ("leviathan", 1)], {"belt": 2, "fire_control": 2, "interdiction": 2}),
     # Act III: Red fields future tech, one new technology a mission.
     ("Salvage Rights", "The Kraken's escorts are back to claim its wreck, and whatever Red was building inside it.",
-     [("battleship", 2), ("missile_cruiser", 3), ("light_cruiser", 3), ("destroyer", 6)], {}),
+     [("battleship", 3), ("missile_cruiser", 5), ("light_cruiser", 4), ("destroyer", 11)], {}),
     ("Strange Lights", "Red destroyers now carry laser cannons. Lasers burn straight through armor belts.",
-     [("destroyer", 16), ("light_cruiser", 4)], {"lasers": 1}),
+     [("destroyer", 24), ("light_cruiser", 6)], {"lasers": 1}),
     ("The Shimmer", "Red cruisers shimmer behind force fields that refill every turn. Hit one ship with "
      "everything at once, or send torpedoes under the fields.",
-     [("light_cruiser", 8), ("destroyer", 10)], {"fields": 1}),
+     [("light_cruiser", 10), ("destroyer", 14)], {"fields": 1}),
     ("Ghost Fleet", "Red's missile cruisers hide among holograms: some of your shots will hit nothing at all.",
-     [("missile_cruiser", 4), ("destroyer", 10), ("torpedo_boat", 14)], {"decoys": 1, "lasers": 2}),
+     [("missile_cruiser", 5), ("destroyer", 13), ("torpedo_boat", 19)], {"decoys": 1, "lasers": 2}),
     ("Plasma Run", "Swarms of torpedo boats armed with plasma torpedoes. Plasma fades as it runs: keep your distance.",
-     [("torpedo_boat", 16), ("torpedo_boat", 16), ("destroyer", 8)], {"plasma_torps": 1}),
+     [("torpedo_boat", 19), ("torpedo_boat", 19), ("destroyer", 10)], {"plasma_torps": 1}),
     ("The Tempest", "The Tempest, a laser super ship, leads the attack. Ion beams drain force fields fast.",
-     [("tempest", 1), ("battleship", 1), ("light_cruiser", 2), ("destroyer", 4)], {"fields": 2, "ion": 1}),
+     [("tempest", 1), ("battleship", 1), ("light_cruiser", 4), ("destroyer", 8)], {"fields": 2, "ion": 1}),
     ("Rail Line", "Red battleships with railguns: their shells go through half of any armor belt.",
-     [("battleship", 2), ("missile_cruiser", 2), ("destroyer", 6)], {"railguns": 1, "point_defense": 1}),
+     [("battleship", 2), ("missile_cruiser", 3), ("destroyer", 6)], {"railguns": 1, "point_defense": 1}),
     ("Graviton Storm", "Graviton beams carry their overkill from ship to ship. Big stacks of small boats suffer most.",
-     [("leviathan_mk2", 1), ("destroyer", 5), ("torpedo_boat", 8)], {"graviton": 1, "lasers": 3}),
+     [("leviathan_mk2", 1), ("destroyer", 8), ("torpedo_boat", 12), ("light_cruiser", 1)], {"graviton": 1, "lasers": 3}),
     ("The Gauntlet", "The Tempest and a Leviathan Mk II together, with every trick Red has learned.",
-     [("tempest", 1), ("leviathan_mk2", 1), ("destroyer", 1)], {"fields": 3, "decoys": 2}),
-    ("The Maelstrom", "The Maelstrom, a sea fortress armed with everything Red knows, comes for you with three "
-     "Leviathan Mk IIs. Win this and the sea is yours.",
-     [("maelstrom", 1), ("leviathan_mk2", 3), ("destroyer", 4)],
+     [("tempest", 1), ("leviathan_mk2", 1), ("destroyer", 2)], {"fields": 3, "decoys": 2}),
+    ("The Maelstrom", "The Maelstrom, a sea fortress armed with everything Red knows, comes for you with two "
+     "Leviathan Mk IIs and a screen of destroyers. Win this and the sea is yours.",
+     [("maelstrom", 1), ("leviathan_mk2", 2), ("destroyer", 6)],
      {"fields": 4, "ion": 2, "plasma_torps": 2, "decoys": 3, "railguns": 2, "point_defense": 2, "graviton": 2}),
 ]
 ACTS = (1, 11, 21)  # the first missions of Act I, Act II and Act III
-# After the last scripted mission, each patrol is 20% bigger than the one before. They grow from the
-# Maelstrom and a small escort, not from the whole fleet of super mission 30.
-ENDLESS_GROWTH = 1.2
-PATROL_FLEET = (("maelstrom", 1), ("destroyer", 2))
+# After the last scripted mission, each patrol's escort is 6% bigger than the one before. They grow from the
+# Maelstrom and an escort a little stronger than Act III's, not from the whole fleet of super mission 30, so
+# Patrol 1 is a little harder than mission 28, the last regular mission before the Maelstrom.
+ENDLESS_GROWTH = 1.06
+PATROL_FLEET = (("maelstrom", 1), ("destroyer", 15), ("light_cruiser", 6))
 
 
 def red_tech(number: int) -> dict[str, int]:
@@ -233,28 +245,13 @@ def red_design(ship_id: str, tech: dict[str, int]) -> ShipDesign:
     return refit(ship_design(ship_id), tech)
 
 
-def grow_fleet(enemy: list[tuple[str, int]], factor: float, tech: dict[str, int]) -> tuple[tuple[str, int], ...]:
-    """``enemy`` with ``factor`` times the hull points afloat.
+def grow_escorts(enemy: list[tuple[str, int]], factor: float) -> tuple[tuple[str, int], ...]:
+    """``enemy`` with ``factor`` times as many escorts in each stack (rounded); super ships stay as they are.
 
-    Super ships stay as they are and the escorts grow to make up the difference,
-    so the fleet gets steadily bigger instead of jumping by a whole super ship.
-    """
-    hp = [red_design(cid, tech).max_hp * n for cid, n in enemy]
-    escorts = [i for i, (cid, _) in enumerate(enemy) if cid not in RED_SHIPS] or list(range(len(enemy)))
-    fixed = sum(h for i, h in enumerate(hp) if i not in escorts)
-    grown = sum(h for i, h in enumerate(hp) if i in escorts)
-    scale = (sum(hp) * factor - fixed) / grown
-    counts = [n for _, n in enemy]
-    each = {i: hp[i] / counts[i] for i in escorts}
-    want = {i: counts[i] * scale for i in escorts}
-    for i in escorts:
-        counts[i] = int(want[i])
-    room = sum((want[i] - counts[i]) * each[i] for i in escorts)
-    for i in sorted(escorts, key=lambda i: counts[i] - want[i]):  # largest remainder first
-        if room >= each[i] / 2:
-            counts[i] += 1
-            room -= each[i]
-    return tuple((cid, max(1, c)) for (cid, _), c in zip(enemy, counts))
+    The escorts carry most of a fleet's firepower, so they are what grows. Growing the hull
+    instead, with the super ship fixed, would pile all of it on the escorts: a fleet 20% bigger
+    by hull had eight times the escort, and the patrols hit a wall at the third."""
+    return tuple((cid, n if cid in RED_SHIPS else max(n, round(n * factor))) for cid, n in enemy)
 
 
 def mission(number: int) -> Mission:
@@ -265,8 +262,8 @@ def mission(number: int) -> Mission:
     extra = number - len(_MISSIONS)
     tech = red_tech(number)
     return Mission(
-        number, f"Patrol {extra}", "Red keeps rebuilding. Each patrol is 20% bigger than the last.",
-        grow_fleet(list(PATROL_FLEET), ENDLESS_GROWTH ** extra, tech), tech,
+        number, f"Patrol {extra}", "Red keeps rebuilding. Each patrol brings 6% more escorts than the last.",
+        grow_escorts(list(PATROL_FLEET), ENDLESS_GROWTH ** extra), tech,
     )
 
 
@@ -284,7 +281,8 @@ class Report:
     bounty: Cost
     next_mission: Optional[Mission]
     skirmish: bool = False
-    repaired: dict[str, int] = field(default_factory=dict)  # of ``sunk``, the ones a super mission's dockyards repair for free
+    repaired: dict[str, int] = field(default_factory=dict)  # of ``sunk``, the ones the dockyards repair for free
+    red_gone: int = 0  # Red ships this lost battle sank that stay sunk for the next try
 
     @property
     def won(self) -> bool:
@@ -317,7 +315,11 @@ class Report:
             lines.append(f"{self.mission.title} failed. Your fleet returns to port to regroup.")
         wrecked = {c: n - self.repaired.get(c, 0) for c, n in self.sunk.items()}
         if any(self.repaired.values()):
-            lines.append(f"The dockyards repair half the ships a super mission sinks, for free: {listed(self.repaired)}.")
+            which = "a super mission" if self.mission.is_super else "a lost mission"
+            lines.append(f"The dockyards repair half the ships {which} sinks, for free: {listed(self.repaired)}.")
+        if self.red_gone:
+            lines.append(f"Red's dockyards are no faster than yours: {self.red_gone} of the Red ships you sank "
+                         f"{'stays' if self.red_gone == 1 else 'stay'} sunk for your next try.")
         if any(wrecked.values()):
             lines.append(f"Towed home for repairs: {listed(wrecked)}.")
         elif not self.sunk and self.outcome != "draw":
@@ -359,6 +361,7 @@ class Campaign:
     lessons: list[str] = field(default_factory=list)  # the last battle's debrief, shown at the next briefing
     boost: bool = False  # fight missions with Math Boost on
     retrofits: dict[str, list[str]] = field(default_factory=dict)  # Act I class -> the retrofits fitted to it
+    red_worn: dict = field(default_factory=dict)  # {"mission": n, "ships": [per Red stack]}: Red ships still sunk from lost tries
 
     # ---- what has opened -----------------------------------------------------------
 
@@ -647,6 +650,38 @@ class Campaign:
         """Missions already won can be replayed as skirmishes."""
         return 1 <= number < self.mission_number
 
+    def _worn(self) -> list[int]:
+        """Red ships of each squadron of the coming mission still sunk from earlier lost tries."""
+        ships = self.red_worn.get("ships") if self.red_worn.get("mission") == self.mission_number else None
+        return list(ships) if ships and len(ships) == len(self.mission.enemy) else [0] * len(self.mission.enemy)
+
+    def red_fleet(self) -> list[tuple[str, int]]:
+        """The coming mission's Red fleet, less the escorts earlier lost tries sank for good: half of what each
+        lost battle sank (rounded down) stays sunk, down to half the squadron's strength (rounded up)."""
+        return [(cid, n - min(gone, self._most_worn(cid, n))) for (cid, n), gone in zip(self.mission.enemy, self._worn())]
+
+    @staticmethod
+    def _most_worn(cid: str, n: int) -> int:
+        """How many ships a squadron of ``n`` can be short at most: none for super ships."""
+        return 0 if cid in RED_SHIPS else n - math.ceil(n * (1 - RED_STAY_SUNK))
+
+    def _wear_red(self, battle: Battle) -> int:
+        """After a lost try that cost the player a quarter of its fleet's hull or more, keep half the Red
+        escorts it sank (rounded down) out of the next try. Returns how many that is."""
+        red = sorted((s for s in battle.stacks.values() if s.side == 1), key=lambda s: s.id)
+        before = self.red_fleet()
+        if [s.start_count for s in red] != [n for _, n in before]:
+            return 0  # not this mission's fleet
+        blue = [s for s in battle.stacks.values() if s.side == 0]
+        lost = sum((s.start_count - max(0, s.count)) * s.design.max_hp for s in blue)
+        if lost < RED_WEAR_COST * sum(s.start_count * s.design.max_hp for s in blue):
+            return 0  # a withdrawal before the fight cost anything: Red's dockyards keep up
+        stay = [math.floor((s.start_count - max(0, s.count)) * RED_STAY_SUNK) for s in red]
+        most = [self._most_worn(cid, n) for cid, n in self.mission.enemy]
+        self.red_worn = {"mission": self.mission_number,
+                         "ships": [min(w + k, cap) for w, k, cap in zip(self._worn(), stay, most)]}
+        return sum(n for _, n in before) - sum(n for _, n in self.red_fleet())
+
     def build_battle(self, skirmish: Optional[int] = None) -> Battle:
         """The battle for the next mission, or with ``skirmish`` a replay of that mission."""
         if skirmish is None:
@@ -658,7 +693,7 @@ class Campaign:
             raise ValueError(f"mission {skirmish} hasn't been won yet")
         seed = self.slot * 100_000 + m.number * 100 + tries
         blue = [(self.class_design(cls.id), n) for cls, n in self.sailing_fleet()]
-        red = [(red_design(cid, m.tech), n) for cid, n in m.enemy]
+        red = [(red_design(cid, m.tech), n) for cid, n in (self.red_fleet() if skirmish is None else m.enemy)]
         rng = random.Random(seed)
         islands = generate_islands(rng, WIDTH, HEIGHT, rng.randint(*ISLANDS))
         return Battle([blue, red], width=WIDTH, height=HEIGHT, islands=islands, seed=seed)
@@ -693,7 +728,8 @@ class Campaign:
             self.notice = " ".join(report.lines())
             return report
         m = self.mission
-        repaired = {cid: math.floor(lost * SUPER_REPAIRED) for cid, lost in sunk.items()} if m.is_super else {}
+        free = m.is_super or outcome != "victory"
+        repaired = {cid: math.floor(lost * DOCKYARD_REPAIRED) for cid, lost in sunk.items()} if free else {}
         for cid, lost in sunk.items():
             wrecked = lost - repaired.get(cid, 0)
             self.fleet[cid] = self.fleet.get(cid, 0) - wrecked
@@ -702,16 +738,20 @@ class Campaign:
             if wrecked:
                 self.wrecks[cid] = self.wrecks.get(cid, 0) + wrecked
         bounty: Cost = {}
+        gone = 0
         if outcome == "victory":
             bounty = m.bounty
             self._earn(bounty)
             self.mission_number += 1
             self.attempts = 0
+            self.red_worn = {}
             self._count("battles", "won")
         else:
+            gone = self._wear_red(battle)
             self.attempts += 1
             self._count("battles", "lost")
-        report = Report(outcome, m, sunk, bounty, self.mission if outcome == "victory" else None, repaired=repaired)
+        report = Report(outcome, m, sunk, bounty, self.mission if outcome == "victory" else None, repaired=repaired,
+                        red_gone=gone)
         self.notice = " ".join(report.lines())
         return report
 
@@ -740,6 +780,7 @@ class Campaign:
             "in_port": self.in_port,
             "boost": self.boost,
             "retrofits": self.retrofits,
+            "red_worn": self.red_worn,
         }
 
     @classmethod
@@ -791,6 +832,11 @@ class Campaign:
             fitted = [r for r in RETROFITS if isinstance(fitted, list) and r in fitted]
             if k in SHIP_CLASSES and SHIP_CLASSES[k].retrofittable and fitted:
                 c.retrofits[k] = fitted
+        worn = data.get("red_worn")
+        if isinstance(worn, dict) and worn.get("mission") == c.mission_number and isinstance(worn.get("ships"), list):
+            ships = worn["ships"]
+            if len(ships) == len(c.mission.enemy) and all(type(k) is int and k >= 0 for k in ships):
+                c.red_worn = {"mission": c.mission_number, "ships": ships}
         return c
 
 

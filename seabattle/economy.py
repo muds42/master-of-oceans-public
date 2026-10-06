@@ -275,7 +275,7 @@ SHIP_CLASSES: dict[str, ShipClass] = {
         ),
         ShipClass(
             "light_cruiser", LIGHT_CRUISER, "Long-range 6-inch guns and a medium armor belt.",
-            {"steel": 200, "powder": 120, "fuel": 40}, {"blueprints": 150}, knots=32, crew=400,
+            {"steel": 160, "powder": 100, "fuel": 30}, {"blueprints": 150}, knots=32, crew=400,
         ),
         ShipClass(
             "battleship", BATTLESHIP, "Huge guns, heavy armor, slow. The queen of the sea.",
@@ -283,16 +283,16 @@ SHIP_CLASSES: dict[str, ShipClass] = {
         ),
         ShipClass(
             "missile_cruiser", MISSILE_CRUISER, "Fires fast, long-range missiles. The ultimate warship.",
-            {"steel": 350, "powder": 150, "fuel": 250, "blueprints": 150}, {"blueprints": 500}, knots=33, crew=550,
+            {"steel": 180, "powder": 80, "fuel": 120, "blueprints": 50}, {"blueprints": 300}, knots=33, crew=550,
         ),
         # ---- Act III: unlocked with Plasma
         ShipClass(
             "hydrofoil", HYDROFOIL_RAIDER, "Skims the waves at speed 5: close enough to launch on the first turn.",
-            {"steel": 40, "fuel": 40, "plasma": 20}, {"plasma": 150}, requires_mission=PLASMA_SHIPS_MISSION, knots=45, crew=16,
+            {"steel": 30, "fuel": 35, "plasma": 10}, {"plasma": 100}, requires_mission=PLASMA_SHIPS_MISSION, knots=45, crew=16,
         ),
         ShipClass(
             "aegis_cruiser", AEGIS_CRUISER, "Force field and point-defense lasers that guard the ships beside it.",
-            {"steel": 300, "powder": 100, "blueprints": 100, "plasma": 80}, {"plasma": 300}, requires_mission=PLASMA_SHIPS_MISSION,
+            {"steel": 180, "powder": 70, "blueprints": 50, "plasma": 60}, {"plasma": 200}, requires_mission=PLASMA_SHIPS_MISSION,
             knots=31, crew=450,
         ),
         ShipClass(

@@ -333,12 +333,16 @@ opens the next:
 | # | Super mission | Red's fleet | Winning it opens |
 | --- | --- | --- | --- |
 | 10 | Cruiser Squadron | 3 light cruisers, 6 destroyers, 6 picket boats | Act II, and Plasma: future tech, retrofits and two new math topics |
-| 20 | The Kraken | the Kraken, a dreadnought, a Leviathan and 2 destroyers | Act III, and all three Plasma ship classes |
-| 30 | The Maelstrom | the Maelstrom, 3 Leviathan Mk IIs and 4 destroyers, with Red's tech at its strongest | the endless patrols: the sea is yours |
+| 20 | The Kraken | the Kraken, a dreadnought and a Leviathan | Act III, and all three Plasma ship classes |
+| 30 | The Maelstrom | the Maelstrom, 2 Leviathan Mk IIs and 6 destroyers, with Red's tech at its strongest | the endless patrols: the sea is yours |
 
 * They are Red's biggest fleets yet, much harder than the missions around
   them (harder than the mission after, too), and longer battles. Spend extra
   time in the workshop first, and expect more than one try.
+* They stand outside the campaign's steady rise. Leave them out and each act
+  carries on where the last one stopped: the mission after a super mission is
+  a little harder than the last regular mission before it (mission 11 than
+  mission 8, 21 than 19, the first patrol than 28).
 * They pay twice the prize money, and the dockyards repair half the ships a
   super mission sinks (rounded down, class by class) for free, win or lose.
   The rest come home as wrecks as usual, so a retry still needs math to pay
@@ -360,9 +364,9 @@ opens the next:
   | Leviathan | over twice a battleship's | six missile launchers and 12-inch guns, as fast as your cruisers |
   | Kraken | five times a battleship's | twelve 16-inch guns and eight missile launchers, but slow |
 
-  Most of these missions are one or two super ships with little or no escort,
-  so the work you put into your fleet early pays off here. Super mission 20
-  brings out all three at once.
+  Most of these missions are one or two super ships, and from mission 15 on
+  they come with a screen of Red's own cruisers, destroyers and boats, growing
+  as the act goes on. Super mission 20 brings out all three at once.
 * **Act III, missions 21-30**: after the Kraken, Red fields future tech of its
   own, one new technology a mission, and the debrief names its counter. Like
   Act II's, these missions pay plasma prize money as well.
@@ -378,7 +382,7 @@ opens the next:
   | 27 | Rail Line | Railguns, Point-Defense Lasers | Railguns halve your belts, so fields do more of the defending |
   | 28 | Graviton Storm | Graviton Beams | Overkill runs through your stacks: big stacks of small boats suffer most |
   | 29 | The Gauntlet | stronger fields and decoys | Everything at once |
-  | 30 | The Maelstrom | everything, at its strongest | The finale, a super mission: the Maelstrom and three Leviathan Mk IIs |
+  | 30 | The Maelstrom | everything, at its strongest | The finale, a super mission: the Maelstrom, two Leviathan Mk IIs and six destroyers |
 
   Act III brings three new super ships:
 
@@ -387,8 +391,9 @@ opens the next:
   | Tempest | over twice a battleship's | sixteen lasers, six 16-inch guns and eight 6-inch guns |
   | Leviathan Mk II | over twice a battleship's, with a force field | eight missile launchers, eight 12-inch and eight 6-inch guns |
   | Maelstrom | five times a battleship's, with a force field | twelve 16-inch guns, eight missile launchers, sixteen 6-inch guns and Red's lasers |
-* **Patrols** follow: the Maelstrom with a growing escort of destroyers. The first is 20% bigger than the
-  Maelstrom and two destroyers, and each one after is 20% bigger than the last.
+* **Patrols** follow: the Maelstrom with a growing escort of destroyers and light cruisers. The first
+  brings 6% more escorts than a screen of fifteen destroyers and six light cruisers, a little harder
+  than mission 28, and each one after brings 6% more than the last; the Maelstrom itself stays one ship.
 
 Red's upgrades are part of each mission: every mission lists what Red has
 gained so far, and Red never loses an upgrade. They depend only on how far the
@@ -404,8 +409,19 @@ Saves from before Act III that were already on patrols pick up at mission 21.
   to the last ship. The campaign then moves on to the next mission and pays
   prize money.
 * **Lose or withdraw** (the **W** key, pressed twice, pulls your whole fleet
-  out): nothing is lost for good. Repair, upgrade and try again. The map is
+  out): nothing is lost for good. The dockyards repair half the ships the
+  battle sank (rounded down, class by class) for free, as they do after a
+  super mission, so one defeat doesn't leave your fleet too weak for the retry.
+  The rest come home as wrecks: repair, upgrade and try again. The map is
   different each time.
+* **Red's dockyards are no faster than yours.** Of the Red escorts a lost
+  battle sinks, half (rounded down, squadron by squadron) stay sunk for your
+  next try at that mission, so every hard-fought try wears Red down: it counts
+  once the battle has sunk a quarter of your own fleet's hull, never takes a
+  squadron below half its strength (rounded up), and Red's super ships are
+  always repaired. The
+  briefing and the Fleet page show how many are still sunk. Winning the mission
+  ends it; skirmishes always bring Red's full fleet.
 
 ### Math Boost
 
@@ -457,7 +473,7 @@ against the battle itself. A hit is big when its hull damage is
 On top of that there is at most one boost per ship's turn (and one when
 torpedoes and missiles arrive at the start of a round), and at most 10 a
 battle, counting the ones you pass. For the modeled player (see [Balancing the campaign](#balancing-the-campaign))
-that comes to 5-10 boosts in 80% of battles from mission 5 on, about 6 on
+that comes to 5-10 boosts in 85% of battles from mission 5 on, about 7 on
 average, split about evenly between your hits and Red's. Missions 1-4 are two
 to four rounds with a handful of hits, so they get 2-4.
 
@@ -465,7 +481,7 @@ to four rounds with a handful of hits, so they get 2-4.
 2.5% of the smaller fleet's hull, if it is at least as big as the hit a
 quarter of the way up the hits so far (instead of the middle one), and up to
 25 come up instead of 10. The modeled player gets about 8 in mission 10, a
-short battle, about 22 in the Kraken and about 12 in the Maelstrom
+short battle, about 21 in the Kraken and about 12 in the Maelstrom
 (`SUPER_FLOOR`, `SUPER_BAR` and `MAX_PER_SUPER_MISSION` in `seabattle/boost.py`).
 
 **Turning it off.** The **Turn off** button by "MATH BOOST ON" in the side
@@ -500,12 +516,12 @@ its topic and level:
 The missions are balanced without Math Boost, so it makes them easier. The
 big hits carry about half of a battle's damage, so the boosts count, most of
 all in the super missions: with 80% of its boost problems right, the modeled
-player wins super missions 10 and 20 at the first try about 72% of the time
-instead of 20-55%, and needs about 22 workshop problems per mission won
-instead of 24 (`python -m seabattle.balance --boost 0.8`). The Maelstrom
-stays hard, about a quarter either way. Guessing every answer (`--boost 0.25`)
-gives 25 problems per mission won, the same as with Math Boost off within the
-model's noise.
+player wins super missions 10 and 20 at the first try 66-86% of the time
+instead of 21-48%, and needs about 19 workshop problems per mission won
+instead of 22 (`python -m seabattle.balance --boost 0.8`, seeds 1 and 2).
+The Maelstrom gains least: 42-59% at the first try, against 44-49% without.
+Guessing every answer (`--boost 0.25`) gives 23 problems per mission won,
+the same as with Math Boost off within the model's noise.
 
 ### The debrief
 
@@ -685,8 +701,8 @@ is covered by tests without opening a window.
 ## Balancing the campaign
 
 `python -m seabattle.balance` plays the whole campaign with a modeled player
-and prints, for each mission, how often it wins at the first try and how many
-tries it takes. The modeled player stands in for a student:
+and prints, for each mission, how often it wins at the first try, how many
+tries it takes and how much of its fleet's hull a first-try battle sinks. The modeled player stands in for a student:
 
 * between missions it solves 15 problems at difficulty 2 and gets 80% right,
   earning whichever currency its next repair or purchase is short of. Before
@@ -702,18 +718,21 @@ most missions and about 75% for the set pieces (the Dreadnought, Twin
 Dreadnoughts, the Tempest, the Gauntlet). The [super missions](#missions) aim
 much lower, at about 40% first-try wins and two or three tries in all, the
 Maelstrom a little harder. With Math Boost on they come in much higher, since
-that's where most of the boosts are. Two seeds (16 players each, Math Boost off) give:
+that's where most of the boosts are. Six seeds (16 players each, Math Boost off) give:
 
 | Super mission | First try | Tries |
 | --- | --- | --- |
-| 10, Cruiser Squadron | 20-55% | 1.8-2.5 |
-| 20, The Kraken | 35-49% | 2.3 |
-| 30, The Maelstrom | 25-38% | 4.7-5.7 |
+| 10, Cruiser Squadron | 21-48% | 1.6-2.2 |
+| 20, The Kraken | 23-65% | 1.2-2.8 |
+| 30, The Maelstrom | 25-46% | 2.9-4.7 |
 
-A player strong enough to win a super mission comes out of it strong, so the
-missions after one come in easier than their targets: 89-100% for Act II's
-missions 11-19, and Act III's missions 21-29 at nearly 100%. Act III's fleets
-would need retuning to bring its challenge back. To tune a new or changed mission, try Red
+The other missions come in at 78-100% first try, Act III's included: its fleets
+are sized for a player who has beaten the Kraken, so each one costs a fifth to
+a half of the fleet's hull. Two rules keep a lost mission from becoming a wall:
+the dockyards repair half the ships a lost battle sinks, and half the Red ships
+it sinks stay sunk for the next try. Without them, a player who lost once often
+came back weaker and lost again (`tools/north_star.py` scores all of this
+against the goals in `NORTH_STAR.md`). To tune a new or changed mission, try Red
 fleets against the players who get there:
 
 ```bash
@@ -726,7 +745,7 @@ brings to the next. `--problems`, `--accuracy` and `--difficulty` change the
 player, and `--seed` gives other players and maps. The model is a guide, not a
 real player: it plays some fights worse than a person would, and with the
 default 16 players a mission's numbers can move by 10-20% from one seed to
-another, more near the end of the campaign. Try a couple of seeds before
+another, more near the end of the campaign, and a super mission's by up to 40%. Try a couple of seeds before
 trusting a number. The whole campaign takes about three minutes on four cores.
 
 `--boost 0.8` fights with [Math Boost](#math-boost) on, taking every boost

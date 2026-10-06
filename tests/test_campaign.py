@@ -381,6 +381,87 @@ def test_a_super_mission_repairs_half_its_losses_for_free():
     assert report.lines()[0] == "Super Mission 10 failed. Your fleet returns to port to regroup."
 
 
+def test_a_lost_mission_repairs_half_its_losses_for_free_and_a_won_one_none():
+    lost = rich(mission_number=7, fleet={"picket": 8, "torpedo_boat": 8})
+    battle = lost.build_battle()
+    run_battle(battle)  # small boats against the Iron Wall's cruisers
+    assert battle.winner == 1 and not lost.mission.is_super
+    report = lost.apply_result(battle)
+    assert report.repaired == {k: v // 2 for k, v in report.sunk.items()} and any(report.repaired.values())
+    assert sum(lost.wrecks.values()) == sum(report.sunk.values()) - sum(report.repaired.values())
+    assert any("half the ships a lost mission sinks" in line for line in report.lines())
+    won = rich(mission_number=2, fleet={"picket": 12, "torpedo_boat": 8})
+    battle = won.build_battle()
+    run_battle(battle)
+    assert battle.winner == 0
+    report = won.apply_result(battle)
+    assert not report.repaired and won.wrecks == {k: v for k, v in report.sunk.items() if v}
+
+
+def _lost(c: cm.Campaign, sunk: list[int]):
+    """Mission ``c``'s battle, lost, with ``sunk`` Red ships gone from each Red squadron."""
+    battle = c.build_battle()
+    red = sorted((s for s in battle.stacks.values() if s.side == 1), key=lambda s: s.id)
+    for s, k in zip(red, sunk):
+        s.count -= k
+    for s in battle.stacks.values():
+        if s.side == 0:
+            s.count, s.status = 0, "sunk"
+    battle.over, battle.winner = True, 1
+    return battle
+
+
+def test_half_the_red_ships_a_lost_battle_sinks_stay_sunk_for_the_next_try(save_dir, monkeypatch):
+    missions = list(cm._MISSIONS)  # mission 8 with a fleet of its own, whatever the campaign's tuning
+    name, text, _, gained = missions[7]
+    missions[7] = (name, text, [("torpedo_boat", 7), ("torpedo_boat", 7), ("destroyer", 2)], gained)
+    monkeypatch.setattr(cm, "_MISSIONS", missions)
+    c = rich(mission_number=8, fleet={"picket": 6})
+    assert [n for _, n in c.mission.enemy] == [7, 7, 2] and c.red_fleet() == list(c.mission.enemy)
+    report = c.apply_result(_lost(c, [5, 2, 1]))
+    assert report.red_gone == 3 and any("3 of the Red ships you sank stay sunk" in line for line in report.lines())
+    assert [n for _, n in c.red_fleet()] == [5, 6, 2]  # half of 5, 2 and 1, rounded down
+    assert [start for _, start, _, _ in c.build_battle().summary()[1]] == [5, 6, 2]
+    c.apply_result(_lost(c, [5, 6, 2]))  # no squadron drops below half its full strength
+    assert [n for _, n in c.red_fleet()] == [4, 4, 1]
+    cm.save(c)
+    assert cm.load(1).red_fleet() == c.red_fleet()
+    assert c.build_battle(skirmish=3).summary()[1] == [(d, n, n, "active") for d, n in
+                                                     [("Torpedo Boat", 9), ("Picket Boat", 4)]]  # skirmishes don't change
+    c.apply_result(_lost(c, [4, 4, 1]))  # however often the player withdraws early, half the fleet is still there
+    assert [n for _, n in c.red_fleet()] == [4, 4, 1]
+    other = cm.Campaign.from_dict(dict(c.to_dict(), mission=9))  # a record for another mission is ignored
+    assert other.red_fleet() == list(other.mission.enemy)
+    win = c.build_battle()
+    for s in win.stacks.values():
+        if s.side == 1:
+            s.count, s.status = 0, "sunk"
+    win.over, win.winner = True, 0
+    c.apply_result(win)
+    assert c.mission_number == 9 and c.red_fleet() == list(c.mission.enemy) and not c.red_worn
+
+
+def test_withdrawing_before_the_fight_costs_anything_wears_nothing_down():
+    c = rich(mission_number=8, fleet={"picket": 6})
+    for _ in range(10):  # sink two of each squadron, then pull out with the whole fleet afloat
+        battle = c.build_battle()
+        for s in battle.stacks.values():
+            if s.side == 1:
+                s.count -= min(2, s.count - 1)
+            else:
+                s.status = "retreated"
+        battle.over, battle.winner = True, 1
+        assert c.apply_result(battle).outcome == "withdrew"
+    assert c.red_fleet() == list(c.mission.enemy) and c.attempts == 10
+
+
+def test_red_super_ships_are_always_repaired_for_the_next_try():
+    c = rich(mission_number=16, fleet={"battleship": 4})
+    assert list(c.mission.enemy) == [("dreadnought", 2), ("destroyer", 5)]
+    report = c.apply_result(_lost(c, [2, 4]))
+    assert c.red_fleet() == [("dreadnought", 2), ("destroyer", 3)] and report.red_gone == 2
+
+
 def test_winning_a_super_mission_says_what_it_opens():
     c = rich(mission_number=20, fleet={"battleship": 20, "missile_cruiser": 20, "destroyer": 20},
              upgrades={"caliber": 4, "armor": 4, "belt": 3, "fire_control": 3, "turrets": 3, "rangefinders": 2})
@@ -392,21 +473,24 @@ def test_winning_a_super_mission_says_what_it_opens():
     assert c.mission_number == 21 and c.class_state("hydrofoil") == "unlockable"
 
 
-def test_each_patrol_is_twenty_percent_bigger():
+def test_each_patrol_brings_more_escorts_than_the_last():
     def hull(m):
         return sum(cm.red_design(cid, m.tech).max_hp * n for cid, n in m.enemy)
 
     # They grow from the Maelstrom and a small escort, not from super mission 30's whole fleet.
     last = cm.Mission(cm.MISSION_COUNT, "", "", cm.PATROL_FLEET, cm.red_tech(cm.MISSION_COUNT))
     assert hull(last) < hull(cm.mission(cm.MISSION_COUNT)) and cm.red_tech(cm.MISSION_COUNT + 1) == last.tech
+    escorts = {cid: n for cid, n in cm.PATROL_FLEET if cid not in RED_SHIPS}
+    assert escorts and dict(cm.PATROL_FLEET)["maelstrom"] == 1
     for extra in range(1, 12):
         m = cm.mission(cm.MISSION_COUNT + extra)
         prev = cm.mission(cm.MISSION_COUNT + extra - 1) if extra > 1 else last
-        assert hull(m) / hull(prev) == pytest.approx(cm.ENDLESS_GROWTH, abs=0.05)
-        assert hull(m) / hull(last) == pytest.approx(cm.ENDLESS_GROWTH ** extra, rel=0.03)
         assert [cid for cid, _ in m.enemy] == [cid for cid, _ in last.enemy]
         assert all(n >= k for (_, n), (_, k) in zip(m.enemy, prev.enemy))  # no stack ever shrinks
-        assert dict(m.enemy)["maelstrom"] == 1
+        assert hull(m) > hull(prev)
+        assert dict(m.enemy)["maelstrom"] == 1  # the super ship stays as it is; the escorts grow
+        for cid, n in escorts.items():
+            assert dict(m.enemy)[cid] == pytest.approx(n * cm.ENDLESS_GROWTH ** extra, abs=0.5)
 
 
 def test_save_and_load_round_trip(save_dir):
