@@ -381,6 +381,23 @@ def test_a_super_mission_repairs_half_its_losses_for_free():
     assert report.lines()[0] == "Super Mission 10 failed. Your fleet returns to port to regroup."
 
 
+def test_a_lost_mission_repairs_half_its_losses_for_free_and_a_won_one_none():
+    lost = rich(mission_number=7, fleet={"picket": 8, "torpedo_boat": 8})
+    battle = lost.build_battle()
+    run_battle(battle)  # small boats against the Iron Wall's cruisers
+    assert battle.winner == 1 and not lost.mission.is_super
+    report = lost.apply_result(battle)
+    assert report.repaired == {k: v // 2 for k, v in report.sunk.items()} and any(report.repaired.values())
+    assert sum(lost.wrecks.values()) == sum(report.sunk.values()) - sum(report.repaired.values())
+    assert any("half the ships a lost mission sinks" in line for line in report.lines())
+    won = rich(mission_number=2, fleet={"picket": 12, "torpedo_boat": 8})
+    battle = won.build_battle()
+    run_battle(battle)
+    assert battle.winner == 0
+    report = won.apply_result(battle)
+    assert not report.repaired and won.wrecks == {k: v for k, v in report.sunk.items() if v}
+
+
 def test_winning_a_super_mission_says_what_it_opens():
     c = rich(mission_number=20, fleet={"battleship": 20, "missile_cruiser": 20, "destroyer": 20},
              upgrades={"caliber": 4, "armor": 4, "belt": 3, "fire_control": 3, "turrets": 3, "rangefinders": 2})

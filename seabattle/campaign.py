@@ -4,8 +4,10 @@ Between missions you are in the workshop: solve math problems to earn
 currency, then spend it on fleet upgrades, new ships and repairs. Ships sunk
 in battle are not gone for good. They are towed home as wrecks that can be
 repaired. A lost or abandoned mission can simply be tried again, so progress
-is never lost; only the repair bill grows. Missions already won can be
-replayed as skirmishes: practice battles with a small prize and no repair bill.
+is never lost, and the dockyards repair half the ships it sank for free: the
+repair bill grows, but one defeat doesn't leave the fleet too weak to retry.
+Missions already won can be replayed as skirmishes: practice battles with a
+small prize and no repair bill.
 
 The campaign has three acts of ten missions. Winning mission 10 ends Act I
 and opens Plasma: a fifth currency with two math topics of its own, spent in
@@ -83,7 +85,9 @@ SUPER_REWARDS = {
 }
 SUPER_MISSIONS = tuple(SUPER_REWARDS)
 SUPER_PRIZE = 2  # a super mission pays this many times the prize money
-SUPER_REPAIRED = 0.5  # share of the ships a super mission sinks (rounded down) that the dockyards repair for free
+# Share of the ships sunk (rounded down) that the dockyards repair for free: after a super mission, win or lose,
+# and after any lost or abandoned mission, so one defeat doesn't leave the fleet too weak to win the retry.
+DOCKYARD_REPAIRED = 0.5
 
 
 @dataclass(frozen=True)
@@ -184,9 +188,9 @@ _MISSIONS = [
     ("Siege of Red Harbor", "You have reached Red's home harbor. A Leviathan and two battleships guard the entrance, "
      "with every cruiser and destroyer in port.",
      [("leviathan", 1), ("battleship", 2), ("light_cruiser", 2), ("destroyer", 4)], {}),
-    ("The Kraken", "The Kraken, Red's floating fortress, sails out with its last dreadnought and its last "
-     "Leviathan. Sink it, and its wreck may hold Red's last secrets.",
-     [("kraken", 1), ("dreadnought", 1), ("leviathan", 1)], {"belt": 2, "fire_control": 2, "interdiction": 2}),
+    ("The Kraken", "The Kraken, Red's floating fortress, sails out with its last dreadnought, its last Leviathan "
+     "and its last destroyer. Sink it, and its wreck may hold Red's last secrets.",
+     [("kraken", 1), ("dreadnought", 1), ("leviathan", 1), ("destroyer", 1)], {"belt": 2, "fire_control": 2, "interdiction": 2}),
     # Act III: Red fields future tech, one new technology a mission.
     ("Salvage Rights", "The Kraken's escorts are back to claim its wreck, and whatever Red was building inside it.",
      [("battleship", 2), ("missile_cruiser", 3), ("light_cruiser", 3), ("destroyer", 6)], {}),
@@ -286,7 +290,7 @@ class Report:
     bounty: Cost
     next_mission: Optional[Mission]
     skirmish: bool = False
-    repaired: dict[str, int] = field(default_factory=dict)  # of ``sunk``, the ones a super mission's dockyards repair for free
+    repaired: dict[str, int] = field(default_factory=dict)  # of ``sunk``, the ones the dockyards repair for free
 
     @property
     def won(self) -> bool:
@@ -319,7 +323,8 @@ class Report:
             lines.append(f"{self.mission.title} failed. Your fleet returns to port to regroup.")
         wrecked = {c: n - self.repaired.get(c, 0) for c, n in self.sunk.items()}
         if any(self.repaired.values()):
-            lines.append(f"The dockyards repair half the ships a super mission sinks, for free: {listed(self.repaired)}.")
+            which = "a super mission" if self.mission.is_super else "a lost mission"
+            lines.append(f"The dockyards repair half the ships {which} sinks, for free: {listed(self.repaired)}.")
         if any(wrecked.values()):
             lines.append(f"Towed home for repairs: {listed(wrecked)}.")
         elif not self.sunk and self.outcome != "draw":
@@ -695,7 +700,8 @@ class Campaign:
             self.notice = " ".join(report.lines())
             return report
         m = self.mission
-        repaired = {cid: math.floor(lost * SUPER_REPAIRED) for cid, lost in sunk.items()} if m.is_super else {}
+        free = m.is_super or outcome != "victory"
+        repaired = {cid: math.floor(lost * DOCKYARD_REPAIRED) for cid, lost in sunk.items()} if free else {}
         for cid, lost in sunk.items():
             wrecked = lost - repaired.get(cid, 0)
             self.fleet[cid] = self.fleet.get(cid, 0) - wrecked

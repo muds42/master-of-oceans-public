@@ -333,7 +333,7 @@ opens the next:
 | # | Super mission | Red's fleet | Winning it opens |
 | --- | --- | --- | --- |
 | 10 | Cruiser Squadron | 3 light cruisers, 6 destroyers, 6 picket boats | Act II, and Plasma: future tech, retrofits and two new math topics |
-| 20 | The Kraken | the Kraken, a dreadnought and a Leviathan | Act III, and all three Plasma ship classes |
+| 20 | The Kraken | the Kraken, a dreadnought, a Leviathan and a destroyer | Act III, and all three Plasma ship classes |
 | 30 | The Maelstrom | the Maelstrom, 3 Leviathan Mk IIs and 4 destroyers, with Red's tech at its strongest | the endless patrols: the sea is yours |
 
 * They are Red's biggest fleets yet, much harder than the missions around
@@ -404,7 +404,10 @@ Saves from before Act III that were already on patrols pick up at mission 21.
   to the last ship. The campaign then moves on to the next mission and pays
   prize money.
 * **Lose or withdraw** (the **W** key, pressed twice, pulls your whole fleet
-  out): nothing is lost for good. Repair, upgrade and try again. The map is
+  out): nothing is lost for good. The dockyards repair half the ships the
+  battle sank (rounded down, class by class) for free, as they do after a
+  super mission, so one defeat doesn't leave your fleet too weak for the retry.
+  The rest come home as wrecks: repair, upgrade and try again. The map is
   different each time.
 
 ### Math Boost
