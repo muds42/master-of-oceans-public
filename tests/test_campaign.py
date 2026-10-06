@@ -411,7 +411,11 @@ def _lost(c: cm.Campaign, sunk: list[int]):
     return battle
 
 
-def test_half_the_red_ships_a_lost_battle_sinks_stay_sunk_for_the_next_try(save_dir):
+def test_half_the_red_ships_a_lost_battle_sinks_stay_sunk_for_the_next_try(save_dir, monkeypatch):
+    missions = list(cm._MISSIONS)  # mission 8 with a fleet of its own, whatever the campaign's tuning
+    name, text, _, gained = missions[7]
+    missions[7] = (name, text, [("torpedo_boat", 7), ("torpedo_boat", 7), ("destroyer", 2)], gained)
+    monkeypatch.setattr(cm, "_MISSIONS", missions)
     c = rich(mission_number=8, fleet={"picket": 6})
     assert [n for _, n in c.mission.enemy] == [7, 7, 2] and c.red_fleet() == list(c.mission.enemy)
     report = c.apply_result(_lost(c, [5, 2, 1]))
