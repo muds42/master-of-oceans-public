@@ -222,11 +222,11 @@ _MISSIONS = [
      {"fields": 4, "ion": 2, "plasma_torps": 2, "decoys": 3, "railguns": 2, "point_defense": 2, "graviton": 2}),
 ]
 ACTS = (1, 11, 21)  # the first missions of Act I, Act II and Act III
-# After the last scripted mission, each patrol's escort is 8% bigger than the one before. They grow from the
+# After the last scripted mission, each patrol's escort is 6% bigger than the one before. They grow from the
 # Maelstrom and an escort a little stronger than Act III's, not from the whole fleet of super mission 30, so
 # Patrol 1 is a little harder than mission 28, the last regular mission before the Maelstrom.
-ENDLESS_GROWTH = 1.08
-PATROL_FLEET = (("maelstrom", 1), ("destroyer", 15), ("light_cruiser", 5))
+ENDLESS_GROWTH = 1.06
+PATROL_FLEET = (("maelstrom", 1), ("destroyer", 15), ("light_cruiser", 6))
 
 
 def red_tech(number: int) -> dict[str, int]:
@@ -262,7 +262,7 @@ def mission(number: int) -> Mission:
     extra = number - len(_MISSIONS)
     tech = red_tech(number)
     return Mission(
-        number, f"Patrol {extra}", "Red keeps rebuilding. Each patrol brings 8% more escorts than the last.",
+        number, f"Patrol {extra}", "Red keeps rebuilding. Each patrol brings 6% more escorts than the last.",
         grow_escorts(list(PATROL_FLEET), ENDLESS_GROWTH ** extra), tech,
     )
 

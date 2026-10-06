@@ -44,36 +44,56 @@ Iteration 6 on all four seeds: **8.1 / 8.7 / 7.7 / 6.7 / 3.5 / 6.1 → 7.2**.
 | 17 | The Missile Age (11) brings 2 torpedo boats with its missile cruisers and destroyers, so it is a little harder than Wolf Pack (8) across super mission 10 | 9.0/8.7/9.0/10.0/3.0/9.7/rise 9.5 → 9.0/**8.8**/**9.4**/10.0/2.9/9.8/rise **10.0** (8.9 → **9.0**) | kept | 8 → 11: 95% → 98% became 95% → 92%; all three boundaries now 3-4 points harder; the Kraken held (35%, 2.6 tries). Next: the Gauntlet (79%, 2.2 tries), then a holdout check |
 | 18 | The Gauntlet (29) brings 2 destroyers instead of 4 with the Tempest and the Leviathan Mk II. A new replay probe (tries and the share needing 4+ tries, not only first-try wins) showed the destroyers, with plasma torpedoes and graviton lasers by then, were what walled weaker fleets in | 9.0/8.8/9.4/10.0/2.9/9.8/rise 10.0 → 9.0/8.8/**9.7**/10.0/2.9/9.8/rise 10.0 (9.0 → **9.1**) | kept | The Gauntlet 79% / 2.2 tries / 17% needing 4+ → 82% / 1.3 / 2%: still the act's set piece, no longer a wall. The Maelstrom 43%, 3.3 tries. Next: holdout check on seeds 5-6 and the README's numbers |
 | 19 | Salvage Rights (21) brings 11 destroyers instead of 9, so it is clearly a little harder than mission 19, the pair the user named; README documents the rule and its Math Boost and super-mission numbers are re-measured on the final fleets | 9.0/8.8/9.7/10.0/2.9/9.8/rise 10.0 → 9.0/8.8/9.4/10.0/2.9/9.9/rise 10.0 (9.1 → 9.0) | kept (user's rule) | 19 → 21 was +2 on seeds 1-4 and +0 on seeds 7-8 (the third review's); now +8 (97% → 89%). The criterion was already 10, so it can't show the gain, and Act III pays 0.3 for it (the Shimmer and Ghost Fleet lose a little more). Kept because it is the user's stated rule. Holdout seeds 5-6: 8.8 |
+| 20 | Patrol 1 clearly a little harder than mission 28: the patrol screen gets a sixth light cruiser and grows 6% a patrol instead of 8% | 9.0/8.8/9.4/10.0/2.9/9.9/rise 10.0 → six seeds 9.0/9.0/9.3/10.0/2.9/**10.0**/rise 10.0 (**9.1**) | kept | 28 → Patrol 1 was +0-1 points on every seed set; now +8 (88% → 80%), and the patrols run 80/72/67% |
 
-## Where it ended (loop stopped after iteration 15: plateau, and the bold attempt didn't help)
+## Where it ended (iteration cap reached at 20)
 
-| | Act I | Act II | Act III | Finales | Choices | Endgame | Weighted |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Baseline, seeds 1-4 | 8.1 | 7.9 | 6.7 | 6.7 | 3.2 | 1.6 | **6.4** |
-| Final, seeds 1-4 (tuned on) | 9.0 | 8.7 | 9.0 | 10.0 | 3.0 | 8.8 | **8.7** |
-| Baseline, seeds 5-6 (holdout) | 7.9 | 7.7 | 6.7 | 8.6 | 3.3 | 5.8 | **7.2** |
-| Final, seeds 5-6 (holdout) | 8.9 | 9.0 | 7.7 | 8.1 | 3.2 | 8.8 | **7.9** |
+Iterations 12-15 hit a plateau and the loop stopped after 15. Then the user added a rule: super
+missions stand outside the progression, so the mission after each is a little harder than the
+last regular mission before it. That became criterion 7, and iterations 16-20 worked on it.
 
-Target (every criterion 8+, weighted 8.5+): met on the tuning seeds except *choices*, which mostly
-measures the modeled player's purchase logic (see Rubric concerns). On the holdout seeds Act III
-(7.7) and choices fall short; Graviton Storm, the Gauntlet and the Maelstrom's tries are the soft
-spots there, as both reviews found.
+Scored with all seven criteria (Act I / II / III / finales / choices / endgame / rise):
 
-Kept: 1 (Act II escorts), 2 (shipyard prices), 3 (defeats repair half), 4 (Act III fleets),
-5 (Maelstrom), 6 (patrol escorts grow, not hull), 8 (Red's losses stay sunk), 9 (finales back on
-target), 10 (polish), 12 (no free grinding), 13 (Wolf Pack, Iron Wall). Reverted: 7, 11, 14, 15.
+| | Act I | Act II | Act III | Finales | Choices | Endgame | Rise | Weighted |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Baseline, seeds 1-6 | 8.0 | 7.8 | 6.7 | 6.7 | 3.2 | 3.0 | 7.2 | **6.6** |
+| Final, seeds 1-6 | 9.0 | 9.0 | 9.3 | 10.0 | 2.9 | 10.0 | 10.0 | **9.1** |
+| Final, seeds 1-4 (tuned on) | 9.0 | 8.8 | 9.4 | 10.0 | 2.9 | 9.9 | 10.0 | **9.0** |
+| Final, seeds 5-6 (held out) | 8.9 | 9.3 | 9.1 | 8.9 | 3.3 | 9.9 | 10.0 | **8.8** |
+
+Across the super missions (six seeds): 8 → 11 is 95% → 93%, 19 → 21 is 96% → 88%, and 28 →
+Patrol 1 is 88% → 80% first-try wins. Target (every criterion 8+, weighted 8.5+): met except
+*choices*, which mostly measures the modeled player's purchase logic (see Rubric concerns).
+
+Players needing 4+ tries (six seeds): the Maelstrom 67% → 41%, the Kraken 24% → 24%, Cruiser
+Squadron 4%. Every regular mission is under 5%.
+
+Kept: 1-6, 8-10, 12, 13, 16-20. Reverted: 7, 11, 14, 15.
 
 Open findings for the user:
-* The modeled player can't plan for prerequisites or value a new class, so 17% of players never
-  reach lasers and every Act I class but the battleship and corvettes goes unbought. Changing it
+* **Act II's missions 12-15 are still parades** (98-100% first try, 13-24% of the fleet lost):
+  the dip right after mission 11. Fixing them starves the Kraken, since every retry is also a
+  workshop of income. They have to be fixed together with a Kraken retune (iterations 11, 14 and
+  15 tried and failed).
+* **Super-mission walls:** a quarter of players need 4+ tries at the Kraken and 41% at the
+  Maelstrom. Red's losses only stay sunk for escorts, and the Kraken is three super ships with
+  nothing to wear down.
+* **The modeled player** can't plan for prerequisites or value a new class: 17% of players never
+  reach lasers, and every Act I class but the battleship and corvettes goes unbought. Changing it
   changes the instrument, so it was left alone.
-* The economy: about a third of fuel and blueprints is never spent, and prize money is about half
-  of all income by Act III, so retries (each a workshop) feed the next act. That coupling makes the
-  Kraken the campaign's pinch point (iterations 11 and 14).
-* Act II still has walkovers (the Flagship, Hunter-Killers, Leviathan Rising at 98-100%); they can
-  only be fixed together with the Kraken.
+* **The economy:** about a third of fuel and blueprints is never spent, and prize money is about
+  half of all income by Act III.
+* **Minor:** withdrawing on turn 1 costs nothing and gives a new map, so a student can reroll the
+  island layout. That was already true before the loop.
 
 ## Rubric concerns
+
+* Third review (seeds 7-8, iteration 18, tool 8.8, its own about 6.5): criterion 7's 0-10 point
+  window is close to the seed-to-seed noise (+/-5), so iterations 19 and 20 pushed 19 → 21 and
+  28 → Patrol 1 to about 8 points. Hull lost would be a second signal, but it isn't comparable
+  across acts (corvettes in Act I, big ships later). The review also repeats that mean tries hides
+  walls (a stuck-share band would show the Kraken and Maelstrom), that the 8% lower bound on hull
+  lost lets 100%-won missions score 7.5, and that the patrols are only scored to mission 33.
 
 * Second review's own score on seeds 5-6 was about 6.2 against the tool's 8.1 (the skill says
   trust the stricter): it reads 98-100% first-try missions as parades, counts players who need 3+

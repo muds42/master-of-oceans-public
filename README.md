@@ -392,8 +392,8 @@ opens the next:
   | Leviathan Mk II | over twice a battleship's, with a force field | eight missile launchers, eight 12-inch and eight 6-inch guns |
   | Maelstrom | five times a battleship's, with a force field | twelve 16-inch guns, eight missile launchers, sixteen 6-inch guns and Red's lasers |
 * **Patrols** follow: the Maelstrom with a growing escort of destroyers and light cruisers. The first
-  brings 8% more escorts than a screen of fifteen destroyers and five light cruisers, a little harder
-  than mission 28, and each one after brings 8% more than the last; the Maelstrom itself stays one ship.
+  brings 6% more escorts than a screen of fifteen destroyers and six light cruisers, a little harder
+  than mission 28, and each one after brings 6% more than the last; the Maelstrom itself stays one ship.
 
 Red's upgrades are part of each mission: every mission lists what Red has
 gained so far, and Red never loses an upgrade. They depend only on how far the
@@ -724,9 +724,9 @@ that's where most of the boosts are. Six seeds (16 players each, Math Boost off)
 | --- | --- | --- |
 | 10, Cruiser Squadron | 21-48% | 1.6-2.2 |
 | 20, The Kraken | 23-65% | 1.2-2.8 |
-| 30, The Maelstrom | 28-49% | 2.8-4.9 |
+| 30, The Maelstrom | 25-46% | 2.9-4.7 |
 
-The other missions come in at 77-100% first try, Act III's included: its fleets
+The other missions come in at 78-100% first try, Act III's included: its fleets
 are sized for a player who has beaten the Kraken, so each one costs a fifth to
 a half of the fleet's hull. Two rules keep a lost mission from becoming a wall:
 the dockyards repair half the ships a lost battle sinks, and half the Red ships
