@@ -16,7 +16,10 @@ Order: act1 / act2 / act3 / finales / choices / endgame → weighted.
 | 31-33 | Patrol 3 is 15% first try, 7.8 tries: the patrols hit a wall too |
 | Shop | Never bought by the modeled players: Destroyer, Light Cruiser, Missile Cruiser, all three Plasma classes, More Torpedo Tubes, Graviton Beams, Plasma Torpedoes, Point-Defense Lasers, Nanite Repair. 26% of blueprints and 18% of plasma go unspent |
 
-Baseline: **8.3 / 7.8 / 6.7 / 6.9 / 3.3 / 1.9 → 6.5**
+Baseline: **8.3 / 7.8 / 6.7 / 6.9 / 3.3 / 1.9 → 6.5** (seeds 1-2; iterations 1-6 are scored on these)
+
+Baseline on all four seeds (from iteration 7 on): **8.1 / 7.9 / 6.7 / 6.7 / 3.2 / 1.6 → 6.4**.
+Iteration 6 on all four seeds: **8.1 / 8.7 / 7.7 / 6.7 / 3.5 / 6.1 → 7.2**.
 
 ## Iterations
 
@@ -28,8 +31,15 @@ Baseline: **8.3 / 7.8 / 6.7 / 6.9 / 3.3 / 1.9 → 6.5**
 | 4 | Act III fleets, tuned one mission at a time in campaign order, aiming probes at ~93% so the sequence lands near 85%: Salvage Rights 1.5x; 26 laser destroyers at Strange Lights; 10 + 14 shielded cruisers and destroyers at the Shimmer; 5/13/19 at Ghost Fleet; 22 + 22 plasma boats and 11 destroyers on the Plasma Run; the Tempest with 1 battleship, 4 cruisers, 8 destroyers; 3/3/8 on the Rail Line; Graviton Storm and the Gauntlet with cruiser and destroyer screens | 8.2/8.6/6.7/7.4/3.2/2.4 → 8.2/8.6/**8.7**/6.7/3.2/0.5 (6.8 → **6.9**) | kept | Act III is 82-98% first try and loses 25-53% of the fleet: a fight every time. Players who fought it reach the Maelstrom weaker (16%, 6.5 tries), the finale's own wall. Next: the Maelstrom. 27-29 run 1.8-2.1 tries: ease a notch later |
 | 5 | The Maelstrom sails without its 4 destroyers: the Maelstrom and three Leviathan Mk IIs | 8.2/8.6/8.7/6.7/3.2/0.5 → 8.2/8.6/8.3/**7.8**/3.2/**1.9** (6.9 → **7.2**) | kept | Maelstrom 16% → 31% first try, 6.5 → 4.8 tries (still over 3.8). Act III's dip is Rail Line and Graviton Storm at 2.0-2.25 tries: the players look ahead to mission 30 when they spend, or noise; ease them a notch. Next: patrols, then the review's suggestions |
 | 6 | Patrols grow their escorts, not their hull: each brings 20% more escorts than the last, from a screen of 8 destroyers and 2 light cruisers; the Maelstrom stays one ship (`grow_escorts` replaces `grow_fleet`) | 8.2/8.6/8.3/7.8/3.2/1.9 → 8.2/8.6/8.3/7.3/4.2/**7.3** (7.2 → **7.6**) | kept | Growing the hull with the super ship fixed put all of it on the escort: 2 → 16 → 32 → 52 destroyers for 1.2/1.44/1.73x the hull, a wall at Patrol 3. Probed out to Patrol 7 at 15%, 20% and 25% escort growth: 20% stays smooth for about six patrols. Patrols 1-3 now 84% first try, 23-33% lost. The 16% who fail every patrol never beat the Maelstrom (see below). Finales' dip is the Maelstrom's tries, 4.8 → 5.0, noise on an unchanged mission |
+| 7 | Laser Cannons and Railguns need Rangefinders 1 instead of 2 (11 of 64 players stopped at Rangefinders 1, never got lasers, and were the whole late-game tail: 9-16% first try at 27-29, 0% at the Maelstrom and every patrol) | 8.1/8.7/7.7/6.7/3.5/6.1 → 8.1/8.3/7.6/3.9/3.5/7.3 (7.2 → 6.5, four seeds) | **reverted** | Lasers then arrive at mission 11 for everyone and flatten Act II and III: the Kraken 38% → 86% first try, the Tempest and the Gauntlet 100%. The gate is doing real work. The tail is the model not planning for prerequisites (a student sees "needs Rangefinders 2" in the shop): see Rubric concerns |
 
 ## Rubric concerns
+
+* The modeled player never buys an upgrade for what it unlocks, only for what it does now. 17% of
+  modeled players stop at Rangefinders 1, so they never reach Laser Cannons, and they make up the
+  whole late-game tail (they lose Rail Line, the Gauntlet, the Maelstrom and the patrols over and
+  over). A real student sees the requirement on the Future Tech page. The tries numbers from
+  mission 25 on are pessimistic for that reason; lowering the gate (iteration 7) broke Act II.
 
 * Iteration 1 added a tries band to every mission (1.0-1.5 regular, 1.8 set pieces, 1.2 intro):
   stricter, not looser. It caught missions 15-17 at 76% first try but 2.0-2.5 average tries, a

@@ -1,6 +1,6 @@
 """Score the campaign against the rubric in NORTH_STAR.md.
 
-    python tools/north_star.py                 # run the modeled player (seeds 1 and 2) and score it
+    python tools/north_star.py                 # run the modeled player (seeds 1-4) and score it
     python tools/north_star.py --reuse DIR     # score the balance_s*.json files already in DIR
 
 It runs ``python -m seabattle.balance --json`` once per seed (about two minutes each on four cores),
@@ -118,7 +118,7 @@ def choices(players: list[dict]) -> tuple[float, list[str], dict[str, float]]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--seeds", type=int, nargs="+", default=[1, 2])
+    parser.add_argument("--seeds", type=int, nargs="+", default=[1, 2, 3, 4])
     parser.add_argument("--players", type=int, default=16)
     parser.add_argument("--out", type=Path, default=ROOT / ".north_star")
     parser.add_argument("--reuse", type=Path, help="score the JSON files already in this folder")

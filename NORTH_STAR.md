@@ -8,8 +8,10 @@ some point.**
 ## How it is measured
 
 `python tools/north_star.py` runs the game's own modeled player (`python -m seabattle.balance`,
-see the README's *Balancing the campaign*) for seeds 1 and 2, 16 players each, through mission 33
-(the first three patrols), and pools all 32 players. For every mission it reports:
+see the README's *Balancing the campaign*) for seeds 1-4, 16 players each, through mission 33
+(the first three patrols), and pools all 64 players. (Iterations 1-6 were scored on seeds 1 and 2;
+the first review, on seeds 3 and 4, showed late Act III fitted to them, so from iteration 7 on
+every score is on all four.) For every mission it reports:
 
 * **first**: the chance of winning at the first try;
 * **tries**: tries needed on average;
@@ -46,7 +48,7 @@ generous; the lower limit is there to catch walkovers.
 | 5 | **Choices and economy** | 1 | Nearly every upgrade, class and retrofit is bought by at least a quarter of players by the end; no currency piles up unspent | 5 x share of options bought by 25%+ of players, + 5 x (no currency more than 5% unspent, -0.5 per point over) |
 | 6 | **Endgame scaling** | 1 | The patrols after the Maelstrom are winnable and get harder smoothly | mean mission score, 31-33 |
 
-**Target:** every criterion at 8 or higher (weighted total 8.5+), on the pooled two-seed run.
+**Target:** every criterion at 8 or higher (weighted total 8.5+), on the pooled four-seed run.
 
 ## Guardrails
 
