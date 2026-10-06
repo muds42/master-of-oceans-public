@@ -213,7 +213,7 @@ _MISSIONS = [
     ("Rail Line", "Red battleships with railguns: their shells go through half of any armor belt.",
      [("battleship", 2), ("missile_cruiser", 3), ("destroyer", 6)], {"railguns": 1, "point_defense": 1}),
     ("Graviton Storm", "Graviton beams carry their overkill from ship to ship. Big stacks of small boats suffer most.",
-     [("leviathan_mk2", 1), ("destroyer", 8), ("torpedo_boat", 12), ("light_cruiser", 2)], {"graviton": 1, "lasers": 3}),
+     [("leviathan_mk2", 1), ("destroyer", 8), ("torpedo_boat", 12), ("light_cruiser", 1)], {"graviton": 1, "lasers": 3}),
     ("The Gauntlet", "The Tempest and a Leviathan Mk II together, with every trick Red has learned.",
      [("tempest", 1), ("leviathan_mk2", 1), ("destroyer", 4)], {"fields": 3, "decoys": 2}),
     ("The Maelstrom", "The Maelstrom, a sea fortress armed with everything Red knows, comes for you with two "
@@ -222,10 +222,11 @@ _MISSIONS = [
      {"fields": 4, "ion": 2, "plasma_torps": 2, "decoys": 3, "railguns": 2, "point_defense": 2, "graviton": 2}),
 ]
 ACTS = (1, 11, 21)  # the first missions of Act I, Act II and Act III
-# After the last scripted mission, each patrol's escort is 20% bigger than the one before. They grow from the
-# Maelstrom and a small escort, not from the whole fleet of super mission 30.
-ENDLESS_GROWTH = 1.2
-PATROL_FLEET = (("maelstrom", 1), ("destroyer", 10), ("light_cruiser", 3))
+# After the last scripted mission, each patrol's escort is 8% bigger than the one before. They grow from the
+# Maelstrom and an escort a little stronger than Act III's, not from the whole fleet of super mission 30, so
+# Patrol 1 is a little harder than mission 28, the last regular mission before the Maelstrom.
+ENDLESS_GROWTH = 1.08
+PATROL_FLEET = (("maelstrom", 1), ("destroyer", 15), ("light_cruiser", 5))
 
 
 def red_tech(number: int) -> dict[str, int]:
@@ -261,7 +262,7 @@ def mission(number: int) -> Mission:
     extra = number - len(_MISSIONS)
     tech = red_tech(number)
     return Mission(
-        number, f"Patrol {extra}", "Red keeps rebuilding. Each patrol brings 20% more escorts than the last.",
+        number, f"Patrol {extra}", "Red keeps rebuilding. Each patrol brings 8% more escorts than the last.",
         grow_escorts(list(PATROL_FLEET), ENDLESS_GROWTH ** extra), tech,
     )
 

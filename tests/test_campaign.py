@@ -473,7 +473,7 @@ def test_winning_a_super_mission_says_what_it_opens():
     assert c.mission_number == 21 and c.class_state("hydrofoil") == "unlockable"
 
 
-def test_each_patrol_brings_twenty_percent_more_escorts():
+def test_each_patrol_brings_more_escorts_than_the_last():
     def hull(m):
         return sum(cm.red_design(cid, m.tech).max_hp * n for cid, n in m.enemy)
 
