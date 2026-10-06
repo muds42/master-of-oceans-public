@@ -40,7 +40,11 @@ SUPER_FIRST = {10: (30, 50), 20: (30, 50), 30: (20, 45)}
 SUPER_TRIES = {10: (1.8, 3.0), 20: (1.8, 3.0), 30: (2.2, 3.8)}
 PCT_PER_POINT = 2.0  # a mission loses a point for every 2 percentage points outside a band...
 TRIES_PER_POINT = 0.15  # ...and for every 0.15 tries outside one
-WEIGHTS = {"act1": 2, "act2": 2, "act3": 3, "finales": 3, "choices": 1, "endgame": 1}
+# Across a super mission the campaign carries on rising as if it weren't there: the first regular mission
+# (or patrol) after it is a little harder than the last regular mission before it, by up to this many
+# points of first-try wins. Super missions and set pieces stand outside the progression.
+RISE = (0, 10)
+WEIGHTS = {"act1": 2, "act2": 2, "act3": 3, "finales": 3, "choices": 1, "endgame": 1, "rise": 2}
 
 
 def outside(value: float, band: tuple[float, float]) -> float:
@@ -144,6 +148,17 @@ def main(argv: list[str] | None = None) -> int:
     def crit(ns) -> float:
         return mean([scores[n] for n in ns if n in scores])
 
+    first_try = {n: 100 * mean([p["first"][str(n)] for p in players if str(n) in p["first"]]) for n in scores}
+    print("\nAcross the super missions (the mission after should be up to 10 points harder):")
+    rise = []
+    for s in SUPER:
+        before = max(n for n in range(1, s) if kind(n) == "regular" and n not in SUPER)
+        after = min(n for n in range(s + 1, LAST + 1) if kind(n) in ("regular", "patrol") and n not in SUPER)
+        harder = first_try[before] - first_try[after]
+        rise.append(clamp10(10 - outside(harder, RISE) / PCT_PER_POINT))
+        print(f"  {before:2} {first_try[before]:4.0f}%  ->  {after:2} {first_try[after]:4.0f}%  "
+              f"({harder:+.0f} points harder)  {rise[-1]:4.1f}")
+
     choice, unused, left = choices(players)
     rubric = {
         "act1": crit(range(1, 10)),
@@ -152,6 +167,7 @@ def main(argv: list[str] | None = None) -> int:
         "finales": crit(SUPER),
         "choices": choice,
         "endgame": crit(PATROLS),
+        "rise": mean(rise),
     }
     print("\nOptions under 25% of players buy:", ", ".join(unused) or "none")
     print("Currency left unspent (share of earned):", ", ".join(f"{k} {v:.0%}" for k, v in left.items()))

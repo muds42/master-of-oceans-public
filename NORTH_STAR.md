@@ -47,6 +47,11 @@ generous; the lower limit is there to catch walkovers.
 | 4 | **Act finales** | 3 | Super missions 10, 20, 30 are hard and beatable: ~40% first try, 2-3 tries; the Maelstrom a little harder, never a wall | mean of the three super scores |
 | 5 | **Choices and economy** | 1 | Nearly every upgrade, class and retrofit is bought by at least a quarter of players by the end; no currency piles up unspent | 5 x share of options bought by 25%+ of players, + 5 x (no currency more than 5% unspent, -0.5 per point over) |
 | 6 | **Endgame scaling** | 1 | The patrols after the Maelstrom are winnable and get harder smoothly | mean mission score, 31-33 |
+| 7 | **Rise across the super missions** | 2 | Super missions (and set pieces) stand outside the progression: the first regular mission (or patrol) after each super mission is a little harder than the last regular mission before it (11 vs 8, 21 vs 19, Patrol 1 vs 28) | per pair: 10 if the later mission's first-try rate is 0-10 points lower, -1 per 2 points outside; mean of the three |
+
+Criterion 7 was added after iteration 15 at the user's request ("super missions should be exempt
+from the general progression ... mission 19 should be a little bit easier than mission 21"), with
+the last regular mission as the comparison so set pieces stay one-off bumps.
 
 **Target:** every criterion at 8 or higher (weighted total 8.5+), on the pooled four-seed run.
 
