@@ -469,7 +469,7 @@ against the battle itself. A hit is big when its hull damage is
 On top of that there is at most one boost per ship's turn (and one when
 torpedoes and missiles arrive at the start of a round), and at most 10 a
 battle, counting the ones you pass. For the modeled player (see [Balancing the campaign](#balancing-the-campaign))
-that comes to 5-10 boosts in 80% of battles from mission 5 on, about 6 on
+that comes to 5-10 boosts in 86% of battles from mission 5 on, about 7 on
 average, split about evenly between your hits and Red's. Missions 1-4 are two
 to four rounds with a handful of hits, so they get 2-4.
 
@@ -512,12 +512,12 @@ its topic and level:
 The missions are balanced without Math Boost, so it makes them easier. The
 big hits carry about half of a battle's damage, so the boosts count, most of
 all in the super missions: with 80% of its boost problems right, the modeled
-player wins super missions 10 and 20 at the first try about 72% of the time
-instead of 20-55%, and needs about 22 workshop problems per mission won
-instead of 24 (`python -m seabattle.balance --boost 0.8`). The Maelstrom
-stays hard, about a quarter either way. Guessing every answer (`--boost 0.25`)
-gives 25 problems per mission won, the same as with Math Boost off within the
-model's noise.
+player wins super missions 10 and 20 at the first try 73-86% of the time
+instead of 21-48%, and needs about 19 workshop problems per mission won
+instead of 22-23 (`python -m seabattle.balance --boost 0.8`, seeds 1 and 2).
+The Maelstrom gains least: 38-61% at the first try, against 46-48% without.
+Guessing every answer (`--boost 0.25`) gives 22-24 problems per mission won,
+the same as with Math Boost off within the model's noise.
 
 ### The debrief
 
@@ -714,16 +714,16 @@ most missions and about 75% for the set pieces (the Dreadnought, Twin
 Dreadnoughts, the Tempest, the Gauntlet). The [super missions](#missions) aim
 much lower, at about 40% first-try wins and two or three tries in all, the
 Maelstrom a little harder. With Math Boost on they come in much higher, since
-that's where most of the boosts are. Four seeds (16 players each, Math Boost off) give:
+that's where most of the boosts are. Six seeds (16 players each, Math Boost off) give:
 
 | Super mission | First try | Tries |
 | --- | --- | --- |
-| 10, Cruiser Squadron | 23-48% | 1.6-2.0 |
-| 20, The Kraken | 15-35% | 3.0-3.4 |
-| 30, The Maelstrom | 11-16% | 3.5-4.3 |
+| 10, Cruiser Squadron | 21-48% | 1.6-2.2 |
+| 20, The Kraken | 28-66% | 1.3-2.6 |
+| 30, The Maelstrom | 25-48% | 2.9-5.2 |
 
-The other missions come in at 78-100% first try, Act III's included: its fleets
-are sized for a player who has beaten the Kraken, so each one costs a third to
+The other missions come in at 72-100% first try, Act III's included: its fleets
+are sized for a player who has beaten the Kraken, so each one costs a fifth to
 a half of the fleet's hull. Two rules keep a lost mission from becoming a wall:
 the dockyards repair half the ships a lost battle sinks, and half the Red ships
 it sinks stay sunk for the next try. Without them, a player who lost once often
@@ -741,7 +741,7 @@ brings to the next. `--problems`, `--accuracy` and `--difficulty` change the
 player, and `--seed` gives other players and maps. The model is a guide, not a
 real player: it plays some fights worse than a person would, and with the
 default 16 players a mission's numbers can move by 10-20% from one seed to
-another, more near the end of the campaign. Try a couple of seeds before
+another, more near the end of the campaign, and a super mission's by up to 40%. Try a couple of seeds before
 trusting a number. The whole campaign takes about three minutes on four cores.
 
 `--boost 0.8` fights with [Math Boost](#math-boost) on, taking every boost

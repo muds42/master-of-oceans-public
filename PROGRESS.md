@@ -41,6 +41,34 @@ Iteration 6 on all four seeds: **8.1 / 8.7 / 7.7 / 6.7 / 3.5 / 6.1 → 7.2**.
 | 14 | Act II's parades: the Flagship with 5 destroyers, Leviathan Rising with 6 cruisers and 10 destroyers, a bigger Swarm (probed 91-93% each) | 9.0/8.7/9.0/10.0/3.0/8.8 → 9.0/8.0/7.8/4.4/2.7/9.0 (8.7 → 6.9) | **reverted** | The Kraken is the campaign's pinch point: a costlier Act II left players poorer there (34% → 14% first try, 3.7 tries), and the extra workshops that cost them then made Act III and the Maelstrom easy (61%). Act II's last walkovers can only be fixed together with a softer Kraken |
 | 15 | Bold attempt after the plateau (12-14 had no net gain): Act II's walkovers firmed up (as in 14) together with a restructured Kraken, a dreadnought and 4 destroyers instead of a dreadnought and a Leviathan, so it has escorts a stuck player can wear down (probed 41% first try) | 9.0/8.7/9.0/10.0/3.0/8.8 → 9.0/8.0/9.4/9.8/2.7/10.0 (8.68 → 8.69) | **reverted** | Flat. The Kraken held (40%, 2.3 tries) and fewer players needed 4+ tries there (27% → 19%), but Act II's walkovers moved instead of going: players planning for the harder 15-17 overbuilt, so 13, 14 and 18 became 100%. Plateau confirmed: stopping the tuning loop |
 
+## Where it ended (loop stopped after iteration 15: plateau, and the bold attempt didn't help)
+
+| | Act I | Act II | Act III | Finales | Choices | Endgame | Weighted |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Baseline, seeds 1-4 | 8.1 | 7.9 | 6.7 | 6.7 | 3.2 | 1.6 | **6.4** |
+| Final, seeds 1-4 (tuned on) | 9.0 | 8.7 | 9.0 | 10.0 | 3.0 | 8.8 | **8.7** |
+| Baseline, seeds 5-6 (holdout) | 7.9 | 7.7 | 6.7 | 8.6 | 3.3 | 5.8 | **7.2** |
+| Final, seeds 5-6 (holdout) | 8.9 | 9.0 | 7.7 | 8.1 | 3.2 | 8.8 | **7.9** |
+
+Target (every criterion 8+, weighted 8.5+): met on the tuning seeds except *choices*, which mostly
+measures the modeled player's purchase logic (see Rubric concerns). On the holdout seeds Act III
+(7.7) and choices fall short; Graviton Storm, the Gauntlet and the Maelstrom's tries are the soft
+spots there, as both reviews found.
+
+Kept: 1 (Act II escorts), 2 (shipyard prices), 3 (defeats repair half), 4 (Act III fleets),
+5 (Maelstrom), 6 (patrol escorts grow, not hull), 8 (Red's losses stay sunk), 9 (finales back on
+target), 10 (polish), 12 (no free grinding), 13 (Wolf Pack, Iron Wall). Reverted: 7, 11, 14, 15.
+
+Open findings for the user:
+* The modeled player can't plan for prerequisites or value a new class, so 17% of players never
+  reach lasers and every Act I class but the battleship and corvettes goes unbought. Changing it
+  changes the instrument, so it was left alone.
+* The economy: about a third of fuel and blueprints is never spent, and prize money is about half
+  of all income by Act III, so retries (each a workshop) feed the next act. That coupling makes the
+  Kraken the campaign's pinch point (iterations 11 and 14).
+* Act II still has walkovers (the Flagship, Hunter-Killers, Leviathan Rising at 98-100%); they can
+  only be fixed together with the Kraken.
+
 ## Rubric concerns
 
 * Second review's own score on seeds 5-6 was about 6.2 against the tool's 8.1 (the skill says
