@@ -171,7 +171,7 @@ _MISSIONS = [
      [("light_cruiser", 3), ("destroyer", 6), ("picket", 6)], {"caliber": 1}),
     # Act II: Plasma and the player's Future Tech.
     ("The Missile Age", "Red has built missile cruisers. Their missiles strike from across the map.",
-     [("missile_cruiser", 2), ("destroyer", 3)], {"interdiction": 1}),
+     [("missile_cruiser", 2), ("destroyer", 3), ("torpedo_boat", 2)], {"interdiction": 1}),
     ("The Flagship", "Red's flagship puts to sea with its destroyer escort. Sink it, and Red will open its "
      "secret shipyards.",
      [("battleship", 1), ("destroyer", 2)], {}),
