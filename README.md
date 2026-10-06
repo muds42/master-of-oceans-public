@@ -334,7 +334,7 @@ opens the next:
 | --- | --- | --- | --- |
 | 10 | Cruiser Squadron | 3 light cruisers, 6 destroyers, 6 picket boats | Act II, and Plasma: future tech, retrofits and two new math topics |
 | 20 | The Kraken | the Kraken, a dreadnought, a Leviathan and a destroyer | Act III, and all three Plasma ship classes |
-| 30 | The Maelstrom | the Maelstrom, 3 Leviathan Mk IIs and 4 destroyers, with Red's tech at its strongest | the endless patrols: the sea is yours |
+| 30 | The Maelstrom | the Maelstrom and 3 Leviathan Mk IIs, with Red's tech at its strongest | the endless patrols: the sea is yours |
 
 * They are Red's biggest fleets yet, much harder than the missions around
   them (harder than the mission after, too), and longer battles. Spend extra

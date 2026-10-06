@@ -213,7 +213,7 @@ _MISSIONS = [
      [("tempest", 1), ("leviathan_mk2", 1), ("destroyer", 6), ("light_cruiser", 2)], {"fields": 3, "decoys": 2}),
     ("The Maelstrom", "The Maelstrom, a sea fortress armed with everything Red knows, comes for you with three "
      "Leviathan Mk IIs. Win this and the sea is yours.",
-     [("maelstrom", 1), ("leviathan_mk2", 3), ("destroyer", 4)],
+     [("maelstrom", 1), ("leviathan_mk2", 3)],
      {"fields": 4, "ion": 2, "plasma_torps": 2, "decoys": 3, "railguns": 2, "point_defense": 2, "graviton": 2}),
 ]
 ACTS = (1, 11, 21)  # the first missions of Act I, Act II and Act III
