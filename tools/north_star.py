@@ -27,15 +27,15 @@ SET_PIECES = (9, 13, 16, 26, 29)  # one big ship (or two) and little else: meant
 SUPER = (10, 20, 30)
 PATROLS = tuple(range(cm.MISSION_COUNT + 1, LAST + 1))
 
-# (first-try band, fleet-lost band), in percent. The README aims at about 85% first-try wins for most
-# missions and about 75% for the set pieces.
+# (first-try band, fleet-lost band in percent, tries band). The README aims at about 85% first-try wins
+# for most missions and about 75% for the set pieces; the tries band catches players who lose, can't pay
+# for the wrecks and lose again.
 BANDS = {
-    "intro": ((85, 100), (0, 35)),
-    "regular": ((78, 95), (8, 50)),
-    "set_piece": ((62, 88), (12, 60)),
-    "patrol": ((50, 90), (12, 60)),
+    "intro": ((85, 100), (0, 35), (1.0, 1.2)),
+    "regular": ((78, 95), (8, 50), (1.0, 1.5)),
+    "set_piece": ((62, 88), (12, 60), (1.0, 1.8)),
+    "patrol": ((50, 90), (12, 60), (1.0, 1.8)),
 }
-PATROL_TRIES = (1.0, 1.8)
 SUPER_FIRST = {10: (30, 50), 20: (30, 50), 30: (20, 45)}
 SUPER_TRIES = {10: (1.8, 3.0), 20: (1.8, 3.0), 30: (2.2, 3.8)}
 PCT_PER_POINT = 2.0  # a mission loses a point for every 2 percentage points outside a band...
@@ -67,11 +67,10 @@ def mission_score(n: int, first: float, tries: float, lost: float) -> float:
     if n in SUPER:
         return min(clamp10(10 - outside(first, SUPER_FIRST[n]) / PCT_PER_POINT),
                    clamp10(10 - outside(tries, SUPER_TRIES[n]) / TRIES_PER_POINT))
-    first_band, lost_band = BANDS[kind(n)]
-    parts = [clamp10(10 - outside(first, first_band) / PCT_PER_POINT), clamp10(10 - outside(lost, lost_band) / PCT_PER_POINT)]
-    if n in PATROLS:
-        parts.append(clamp10(10 - outside(tries, PATROL_TRIES) / TRIES_PER_POINT))
-    return min(parts)
+    first_band, lost_band, tries_band = BANDS[kind(n)]
+    return min(clamp10(10 - outside(first, first_band) / PCT_PER_POINT),
+               clamp10(10 - outside(lost, lost_band) / PCT_PER_POINT),
+               clamp10(10 - outside(tries, tries_band) / TRIES_PER_POINT))
 
 
 def run(seeds: list[int], out: Path, players: int) -> None:

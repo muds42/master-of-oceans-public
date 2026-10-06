@@ -333,7 +333,7 @@ opens the next:
 | # | Super mission | Red's fleet | Winning it opens |
 | --- | --- | --- | --- |
 | 10 | Cruiser Squadron | 3 light cruisers, 6 destroyers, 6 picket boats | Act II, and Plasma: future tech, retrofits and two new math topics |
-| 20 | The Kraken | the Kraken, a dreadnought, a Leviathan and 2 destroyers | Act III, and all three Plasma ship classes |
+| 20 | The Kraken | the Kraken, a dreadnought and a Leviathan | Act III, and all three Plasma ship classes |
 | 30 | The Maelstrom | the Maelstrom, 3 Leviathan Mk IIs and 4 destroyers, with Red's tech at its strongest | the endless patrols: the sea is yours |
 
 * They are Red's biggest fleets yet, much harder than the missions around
@@ -360,9 +360,9 @@ opens the next:
   | Leviathan | over twice a battleship's | six missile launchers and 12-inch guns, as fast as your cruisers |
   | Kraken | five times a battleship's | twelve 16-inch guns and eight missile launchers, but slow |
 
-  Most of these missions are one or two super ships with little or no escort,
-  so the work you put into your fleet early pays off here. Super mission 20
-  brings out all three at once.
+  Most of these missions are one or two super ships, and from mission 15 on
+  they come with a screen of Red's own cruisers, destroyers and boats, growing
+  as the act goes on. Super mission 20 brings out all three at once.
 * **Act III, missions 21-30**: after the Kraken, Red fields future tech of its
   own, one new technology a mission, and the debrief names its counter. Like
   Act II's, these missions pay plasma prize money as well.

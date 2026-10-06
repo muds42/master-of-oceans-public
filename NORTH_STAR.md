@@ -18,13 +18,14 @@ see the README's *Balancing the campaign*) for seeds 1 and 2, 16 players each, t
 
 Each mission scores 0-10 against its bands, as good as its worst part: 10 inside every band,
 minus 1 point for every 2 percentage points outside a band, or every 0.15 tries outside a tries
-band (super missions and patrols).
+band. (The tries band catches a death spiral: a player who loses, can't pay for the wrecks, and
+loses again.)
 
 | Kind | Missions | First try | Fleet lost | Tries |
 | --- | --- | --- | --- | --- |
-| Intro | 1-3 | 85-100% | 0-35% | |
-| Regular | the rest | 78-95% | 8-50% | |
-| Set piece | 9, 13, 16, 26, 29 | 62-88% | 12-60% | |
+| Intro | 1-3 | 85-100% | 0-35% | 1.0-1.2 |
+| Regular | the rest | 78-95% | 8-50% | 1.0-1.5 |
+| Set piece | 9, 13, 16, 26, 29 | 62-88% | 12-60% | 1.0-1.8 |
 | Super | 10, 20 | 30-50% | | 1.8-3.0 |
 | Super | 30 | 20-45% | | 2.2-3.8 |
 | Patrol | 31-33 | 50-90% | 12-60% | 1.0-1.8 |

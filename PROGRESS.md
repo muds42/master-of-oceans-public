@@ -22,8 +22,16 @@ Baseline: **8.3 / 7.8 / 6.7 / 6.9 / 3.3 / 1.9 → 6.5**
 
 | # | Change | Scores before → after | Kept? | Next idea |
 | --- | --- | --- | --- | --- |
+| 1 | Act II tail: escorts for missions 15-19 (Leviathan + 2 light cruisers + 4 destroyers; twin dreadnoughts + 5 destroyers; a bigger swarm; + 4 destroyers in the straits; 2 battleships, 2 cruisers, 4 destroyers at the harbor). The Kraken loses its 2 destroyers so the act finale stays ~40% | 8.3/7.8/6.7/6.9/3.3/1.9 → 8.3/**8.8**/6.7/6.7/3.2/0.0 (6.5 → 6.5) | kept | Endgame's drop is the Maelstrom wall's knock-on (players stuck at 30 reach the patrols crippled). Next: shipyard prices before Act III, since they move the player's strength |
 
 ## Rubric concerns
+
+* Iteration 1 added a tries band to every mission (1.0-1.5 regular, 1.8 set pieces, 1.2 intro):
+  stricter, not looser. It caught missions 15-17 at 76% first try but 2.0-2.5 average tries, a
+  death spiral the first-try rate hides. The baseline scores the same with or without it (6.5).
+* Probing a fleet from a snapshot taken before later missions changed overestimates the player:
+  the modeled player spends with the next three missions in view, so harder missions ahead change
+  what it buys now. Re-snapshot after changing the missions ahead of the one being probed.
 
 * The modeled player judges purchases with a Lanchester estimate (damage x hull per stack), which
   favours deepening a stack it already has over starting a new class. "Never bought" is partly

@@ -172,19 +172,21 @@ _MISSIONS = [
     ("Hunter-Killers", "Missile cruisers and torpedo boats hunt in packs, striking from long range.",
      [("missile_cruiser", 2), ("torpedo_boat", 6), ("destroyer", 4)], {}),
     ("Leviathan Rising", "The Leviathan, a missile battlecruiser as fast as your cruisers, leads the attack.",
-     [("leviathan", 1), ("destroyer", 2)], {}),
-    ("Twin Dreadnoughts", "Two dreadnoughts steam side by side. They don't think they need an escort.",
-     [("dreadnought", 2)], {}),
+     [("leviathan", 1), ("light_cruiser", 2), ("destroyer", 4)], {}),
+    ("Twin Dreadnoughts", "Two dreadnoughts steam side by side, with a screen of destroyers to keep your torpedo "
+     "boats off them.",
+     [("dreadnought", 2), ("destroyer", 5)], {}),
     ("The Swarm", "Red floods the sea with small boats around a Leviathan. Every torpedo counts.",
-     [("leviathan", 1), ("torpedo_boat", 4), ("torpedo_boat", 4), ("destroyer", 2), ("picket", 4)],
+     [("leviathan", 1), ("torpedo_boat", 9), ("torpedo_boat", 9), ("destroyer", 4), ("picket", 8)],
      {"warheads": 2, "armor": 2}),
     ("Battle of the Straits", "A dreadnought and a Leviathan force the straits together.",
-     [("dreadnought", 1), ("leviathan", 1)], {"caliber": 2, "turrets": 1}),
-    ("Siege of Red Harbor", "You have reached Red's home harbor. A Leviathan and a battleship guard the entrance.",
-     [("leviathan", 1), ("battleship", 1), ("destroyer", 2)], {}),
-    ("The Kraken", "The Kraken, Red's floating fortress, sails out with its last dreadnought, its last Leviathan "
-     "and every destroyer Red has left. Sink it, and its wreck may hold Red's last secrets.",
-     [("kraken", 1), ("dreadnought", 1), ("leviathan", 1), ("destroyer", 2)], {"belt": 2, "fire_control": 2, "interdiction": 2}),
+     [("dreadnought", 1), ("leviathan", 1), ("destroyer", 4)], {"caliber": 2, "turrets": 1}),
+    ("Siege of Red Harbor", "You have reached Red's home harbor. A Leviathan and two battleships guard the entrance, "
+     "with every cruiser and destroyer in port.",
+     [("leviathan", 1), ("battleship", 2), ("light_cruiser", 2), ("destroyer", 4)], {}),
+    ("The Kraken", "The Kraken, Red's floating fortress, sails out with its last dreadnought and its last "
+     "Leviathan. Sink it, and its wreck may hold Red's last secrets.",
+     [("kraken", 1), ("dreadnought", 1), ("leviathan", 1)], {"belt": 2, "fire_control": 2, "interdiction": 2}),
     # Act III: Red fields future tech, one new technology a mission.
     ("Salvage Rights", "The Kraken's escorts are back to claim its wreck, and whatever Red was building inside it.",
      [("battleship", 2), ("missile_cruiser", 3), ("light_cruiser", 3), ("destroyer", 6)], {}),
