@@ -17,9 +17,9 @@ problems between missions the player wins most missions at the first try
 about 85% of the time or better, and the set pieces (the Dreadnought, Twin
 Dreadnoughts, the Tempest, the Gauntlet) about 75%. The super missions (10, 20
 and 30) aim much lower: with 30 problems before them, about 40% at the first
-try and two or three tries in all, the Maelstrom a little harder. A player
-strong enough to win a super mission comes out of it strong, so the missions
-just after one come in easier than their targets, Act III's most of all.
+try and two or three tries in all, the Maelstrom a little harder. A "lost"
+column shows the share of the fleet's hull each first-try battle sank: a
+mission won at the first try every time can still be a hard fight, or a parade.
 
 With ``--boost`` the player fights with Math Boost on (see ``boost.py``) and
 answers that share of its problems right; a column then shows how many

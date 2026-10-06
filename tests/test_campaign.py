@@ -398,6 +398,43 @@ def test_a_lost_mission_repairs_half_its_losses_for_free_and_a_won_one_none():
     assert not report.repaired and won.wrecks == {k: v for k, v in report.sunk.items() if v}
 
 
+def _lost(c: cm.Campaign, sunk: list[int]):
+    """Mission ``c``'s battle, lost, with ``sunk`` Red ships gone from each Red squadron."""
+    battle = c.build_battle()
+    red = sorted((s for s in battle.stacks.values() if s.side == 1), key=lambda s: s.id)
+    for s, k in zip(red, sunk):
+        s.count -= k
+    for s in battle.stacks.values():
+        if s.side == 0:
+            s.count, s.status = 0, "sunk"
+    battle.over, battle.winner = True, 1
+    return battle
+
+
+def test_half_the_red_ships_a_lost_battle_sinks_stay_sunk_for_the_next_try(save_dir):
+    c = rich(mission_number=8, fleet={"picket": 6})
+    assert [n for _, n in c.mission.enemy] == [7, 7, 2] and c.red_fleet() == list(c.mission.enemy)
+    report = c.apply_result(_lost(c, [5, 2, 1]))
+    assert report.red_gone == 3 and any("3 of the Red ships you sank stay sunk" in line for line in report.lines())
+    assert [n for _, n in c.red_fleet()] == [5, 6, 2]  # half of 5, 2 and 1, rounded down
+    assert [start for _, start, _, _ in c.build_battle().summary()[1]] == [5, 6, 2]
+    c.apply_result(_lost(c, [5, 6, 2]))  # half of a squadron sunk to the last ship comes back: it never runs out
+    assert [n for _, n in c.red_fleet()] == [3, 3, 1]
+    cm.save(c)
+    assert cm.load(1).red_fleet() == c.red_fleet()
+    assert c.build_battle(skirmish=3).summary()[1] == [(d, n, n, "active") for d, n in
+                                                     [("Torpedo Boat", 9), ("Picket Boat", 4)]]  # skirmishes don't change
+    other = cm.Campaign.from_dict(dict(c.to_dict(), mission=9))  # a record for another mission is ignored
+    assert other.red_fleet() == list(other.mission.enemy)
+    win = c.build_battle()
+    for s in win.stacks.values():
+        if s.side == 1:
+            s.count, s.status = 0, "sunk"
+    win.over, win.winner = True, 0
+    c.apply_result(win)
+    assert c.mission_number == 9 and c.red_fleet() == list(c.mission.enemy) and not c.red_worn
+
+
 def test_winning_a_super_mission_says_what_it_opens():
     c = rich(mission_number=20, fleet={"battleship": 20, "missile_cruiser": 20, "destroyer": 20},
              upgrades={"caliber": 4, "armor": 4, "belt": 3, "fire_control": 3, "turrets": 3, "rangefinders": 2})

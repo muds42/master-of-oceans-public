@@ -1059,11 +1059,15 @@ class WorkshopScene:
             y += 22
 
     def _enemy_list(self, surf: pygame.Surface, x: int, y: int, m, width: int = 560, below: int = 0) -> int:
-        """Red's ships (super ships in red), then its upgrades, starting no higher than ``below``."""
+        """Red's ships (super ships in red), then its upgrades, starting no higher than ``below``. For the
+        campaign's next mission, less the ships earlier lost tries sank for good."""
         text(surf, "Red fleet:", (x, y), 19, (244, 150, 130))
         y += 24
-        for cid, n in m.enemy:
-            text(surf, f"{n} x {ship_design(cid).name}", (x + 12, y), 19, T.TEXT if cid in SHIP_CLASSES else T.BAD)
+        fleet = self.c.red_fleet() if m.number == self.c.mission_number else list(m.enemy)
+        for (cid, n), (_, full) in zip(fleet, m.enemy):
+            shown = text(surf, f"{n} x {ship_design(cid).name}", (x + 12, y), 19, T.TEXT if cid in SHIP_CLASSES else T.BAD)
+            if n < full:
+                text(surf, f"({full - n} still sunk)", (shown.right + 10, y + 2), 17, T.GOOD)
             y += 22
         y = max(y, below)
         if m.tech:

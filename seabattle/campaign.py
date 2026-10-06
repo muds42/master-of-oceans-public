@@ -88,6 +88,9 @@ SUPER_PRIZE = 2  # a super mission pays this many times the prize money
 # Share of the ships sunk (rounded down) that the dockyards repair for free: after a super mission, win or lose,
 # and after any lost or abandoned mission, so one defeat doesn't leave the fleet too weak to win the retry.
 DOCKYARD_REPAIRED = 0.5
+# Red's dockyards are no faster: of the Red ships a lost battle sinks, this share (rounded down) stays sunk for
+# the next try at that mission. Each Red squadron keeps at least one ship, so a super ship is always there.
+RED_STAY_SUNK = 0.5
 
 
 @dataclass(frozen=True)
@@ -276,6 +279,7 @@ class Report:
     next_mission: Optional[Mission]
     skirmish: bool = False
     repaired: dict[str, int] = field(default_factory=dict)  # of ``sunk``, the ones the dockyards repair for free
+    red_gone: int = 0  # Red ships this lost battle sank that stay sunk for the next try
 
     @property
     def won(self) -> bool:
@@ -310,6 +314,9 @@ class Report:
         if any(self.repaired.values()):
             which = "a super mission" if self.mission.is_super else "a lost mission"
             lines.append(f"The dockyards repair half the ships {which} sinks, for free: {listed(self.repaired)}.")
+        if self.red_gone:
+            lines.append(f"Red's dockyards are no faster than yours: {self.red_gone} of the Red ships you sank "
+                         f"{'stays' if self.red_gone == 1 else 'stay'} sunk for your next try.")
         if any(wrecked.values()):
             lines.append(f"Towed home for repairs: {listed(wrecked)}.")
         elif not self.sunk and self.outcome != "draw":
@@ -351,6 +358,7 @@ class Campaign:
     lessons: list[str] = field(default_factory=list)  # the last battle's debrief, shown at the next briefing
     boost: bool = False  # fight missions with Math Boost on
     retrofits: dict[str, list[str]] = field(default_factory=dict)  # Act I class -> the retrofits fitted to it
+    red_worn: dict = field(default_factory=dict)  # {"mission": n, "ships": [per Red stack]}: Red ships still sunk from lost tries
 
     # ---- what has opened -----------------------------------------------------------
 
@@ -639,6 +647,27 @@ class Campaign:
         """Missions already won can be replayed as skirmishes."""
         return 1 <= number < self.mission_number
 
+    def _worn(self) -> list[int]:
+        """Red ships of each squadron of the coming mission still sunk from earlier lost tries."""
+        ships = self.red_worn.get("ships") if self.red_worn.get("mission") == self.mission_number else None
+        return list(ships) if ships and len(ships) == len(self.mission.enemy) else [0] * len(self.mission.enemy)
+
+    def red_fleet(self) -> list[tuple[str, int]]:
+        """The coming mission's Red fleet, less the ships earlier lost tries sank for good: half of what each
+        lost battle sank (rounded down) stays sunk. Every squadron keeps at least one ship."""
+        return [(cid, max(1, n - gone)) for (cid, n), gone in zip(self.mission.enemy, self._worn())]
+
+    def _wear_red(self, battle: Battle) -> int:
+        """After a lost try, keep half the Red ships it sank (rounded down) out of the next try.
+        Returns how many that is."""
+        red = sorted((s for s in battle.stacks.values() if s.side == 1), key=lambda s: s.id)
+        before = self.red_fleet()
+        if [s.start_count for s in red] != [n for _, n in before]:
+            return 0  # not this mission's fleet
+        stay = [math.floor((s.start_count - max(0, s.count)) * RED_STAY_SUNK) for s in red]
+        self.red_worn = {"mission": self.mission_number, "ships": [w + k for w, k in zip(self._worn(), stay)]}
+        return sum(n for _, n in before) - sum(n for _, n in self.red_fleet())
+
     def build_battle(self, skirmish: Optional[int] = None) -> Battle:
         """The battle for the next mission, or with ``skirmish`` a replay of that mission."""
         if skirmish is None:
@@ -650,7 +679,7 @@ class Campaign:
             raise ValueError(f"mission {skirmish} hasn't been won yet")
         seed = self.slot * 100_000 + m.number * 100 + tries
         blue = [(self.class_design(cls.id), n) for cls, n in self.sailing_fleet()]
-        red = [(red_design(cid, m.tech), n) for cid, n in m.enemy]
+        red = [(red_design(cid, m.tech), n) for cid, n in (self.red_fleet() if skirmish is None else m.enemy)]
         rng = random.Random(seed)
         islands = generate_islands(rng, WIDTH, HEIGHT, rng.randint(*ISLANDS))
         return Battle([blue, red], width=WIDTH, height=HEIGHT, islands=islands, seed=seed)
@@ -695,16 +724,20 @@ class Campaign:
             if wrecked:
                 self.wrecks[cid] = self.wrecks.get(cid, 0) + wrecked
         bounty: Cost = {}
+        gone = 0
         if outcome == "victory":
             bounty = m.bounty
             self._earn(bounty)
             self.mission_number += 1
             self.attempts = 0
+            self.red_worn = {}
             self._count("battles", "won")
         else:
+            gone = self._wear_red(battle)
             self.attempts += 1
             self._count("battles", "lost")
-        report = Report(outcome, m, sunk, bounty, self.mission if outcome == "victory" else None, repaired=repaired)
+        report = Report(outcome, m, sunk, bounty, self.mission if outcome == "victory" else None, repaired=repaired,
+                        red_gone=gone)
         self.notice = " ".join(report.lines())
         return report
 
@@ -733,6 +766,7 @@ class Campaign:
             "in_port": self.in_port,
             "boost": self.boost,
             "retrofits": self.retrofits,
+            "red_worn": self.red_worn,
         }
 
     @classmethod
@@ -784,6 +818,11 @@ class Campaign:
             fitted = [r for r in RETROFITS if isinstance(fitted, list) and r in fitted]
             if k in SHIP_CLASSES and SHIP_CLASSES[k].retrofittable and fitted:
                 c.retrofits[k] = fitted
+        worn = data.get("red_worn")
+        if isinstance(worn, dict) and worn.get("mission") == c.mission_number and isinstance(worn.get("ships"), list):
+            ships = worn["ships"]
+            if len(ships) == len(c.mission.enemy) and all(type(k) is int and k >= 0 for k in ships):
+                c.red_worn = {"mission": c.mission_number, "ships": ships}
         return c
 
 

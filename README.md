@@ -410,6 +410,11 @@ Saves from before Act III that were already on patrols pick up at mission 21.
   super mission, so one defeat doesn't leave your fleet too weak for the retry.
   The rest come home as wrecks: repair, upgrade and try again. The map is
   different each time.
+* **Red's dockyards are no faster than yours.** Of the Red ships a lost battle
+  sinks, half (rounded down, squadron by squadron) stay sunk for your next try
+  at that mission, so every try wears Red down. The briefing and the Fleet page
+  show how many are still sunk. Winning the mission ends it; skirmishes always
+  bring Red's full fleet.
 
 ### Math Boost
 
@@ -689,8 +694,8 @@ is covered by tests without opening a window.
 ## Balancing the campaign
 
 `python -m seabattle.balance` plays the whole campaign with a modeled player
-and prints, for each mission, how often it wins at the first try and how many
-tries it takes. The modeled player stands in for a student:
+and prints, for each mission, how often it wins at the first try, how many
+tries it takes and how much of its fleet's hull a first-try battle sinks. The modeled player stands in for a student:
 
 * between missions it solves 15 problems at difficulty 2 and gets 80% right,
   earning whichever currency its next repair or purchase is short of. Before
@@ -706,18 +711,21 @@ most missions and about 75% for the set pieces (the Dreadnought, Twin
 Dreadnoughts, the Tempest, the Gauntlet). The [super missions](#missions) aim
 much lower, at about 40% first-try wins and two or three tries in all, the
 Maelstrom a little harder. With Math Boost on they come in much higher, since
-that's where most of the boosts are. Two seeds (16 players each, Math Boost off) give:
+that's where most of the boosts are. Four seeds (16 players each, Math Boost off) give:
 
 | Super mission | First try | Tries |
 | --- | --- | --- |
-| 10, Cruiser Squadron | 20-55% | 1.8-2.5 |
-| 20, The Kraken | 35-49% | 2.3 |
-| 30, The Maelstrom | 25-38% | 4.7-5.7 |
+| 10, Cruiser Squadron | 23-48% | 1.6-2.0 |
+| 20, The Kraken | 15-35% | 3.0-3.4 |
+| 30, The Maelstrom | 11-16% | 3.5-4.3 |
 
-A player strong enough to win a super mission comes out of it strong, so the
-missions after one come in easier than their targets: 89-100% for Act II's
-missions 11-19, and Act III's missions 21-29 at nearly 100%. Act III's fleets
-would need retuning to bring its challenge back. To tune a new or changed mission, try Red
+The other missions come in at 78-100% first try, Act III's included: its fleets
+are sized for a player who has beaten the Kraken, so each one costs a third to
+a half of the fleet's hull. Two rules keep a lost mission from becoming a wall:
+the dockyards repair half the ships a lost battle sinks, and half the Red ships
+it sinks stay sunk for the next try. Without them, a player who lost once often
+came back weaker and lost again (`tools/north_star.py` scores all of this
+against the goals in `NORTH_STAR.md`). To tune a new or changed mission, try Red
 fleets against the players who get there:
 
 ```bash
