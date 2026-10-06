@@ -215,7 +215,7 @@ _MISSIONS = [
     ("Graviton Storm", "Graviton beams carry their overkill from ship to ship. Big stacks of small boats suffer most.",
      [("leviathan_mk2", 1), ("destroyer", 8), ("torpedo_boat", 12), ("light_cruiser", 1)], {"graviton": 1, "lasers": 3}),
     ("The Gauntlet", "The Tempest and a Leviathan Mk II together, with every trick Red has learned.",
-     [("tempest", 1), ("leviathan_mk2", 1), ("destroyer", 4)], {"fields": 3, "decoys": 2}),
+     [("tempest", 1), ("leviathan_mk2", 1), ("destroyer", 2)], {"fields": 3, "decoys": 2}),
     ("The Maelstrom", "The Maelstrom, a sea fortress armed with everything Red knows, comes for you with two "
      "Leviathan Mk IIs and a screen of destroyers. Win this and the sea is yours.",
      [("maelstrom", 1), ("leviathan_mk2", 2), ("destroyer", 6)],
