@@ -198,7 +198,7 @@ _MISSIONS = [
      [("kraken", 1), ("dreadnought", 1), ("leviathan", 1)], {"belt": 2, "fire_control": 2, "interdiction": 2}),
     # Act III: Red fields future tech, one new technology a mission.
     ("Salvage Rights", "The Kraken's escorts are back to claim its wreck, and whatever Red was building inside it.",
-     [("battleship", 3), ("missile_cruiser", 5), ("light_cruiser", 4), ("destroyer", 9)], {}),
+     [("battleship", 3), ("missile_cruiser", 5), ("light_cruiser", 4), ("destroyer", 11)], {}),
     ("Strange Lights", "Red destroyers now carry laser cannons. Lasers burn straight through armor belts.",
      [("destroyer", 24), ("light_cruiser", 6)], {"lasers": 1}),
     ("The Shimmer", "Red cruisers shimmer behind force fields that refill every turn. Hit one ship with "

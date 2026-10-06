@@ -339,6 +339,10 @@ opens the next:
 * They are Red's biggest fleets yet, much harder than the missions around
   them (harder than the mission after, too), and longer battles. Spend extra
   time in the workshop first, and expect more than one try.
+* They stand outside the campaign's steady rise. Leave them out and each act
+  carries on where the last one stopped: the mission after a super mission is
+  a little harder than the last regular mission before it (mission 11 than
+  mission 8, 21 than 19, the first patrol than 28).
 * They pay twice the prize money, and the dockyards repair half the ships a
   super mission sinks (rounded down, class by class) for free, win or lose.
   The rest come home as wrecks as usual, so a retry still needs math to pay
@@ -469,7 +473,7 @@ against the battle itself. A hit is big when its hull damage is
 On top of that there is at most one boost per ship's turn (and one when
 torpedoes and missiles arrive at the start of a round), and at most 10 a
 battle, counting the ones you pass. For the modeled player (see [Balancing the campaign](#balancing-the-campaign))
-that comes to 5-10 boosts in 86% of battles from mission 5 on, about 7 on
+that comes to 5-10 boosts in 85% of battles from mission 5 on, about 7 on
 average, split about evenly between your hits and Red's. Missions 1-4 are two
 to four rounds with a handful of hits, so they get 2-4.
 
@@ -477,7 +481,7 @@ to four rounds with a handful of hits, so they get 2-4.
 2.5% of the smaller fleet's hull, if it is at least as big as the hit a
 quarter of the way up the hits so far (instead of the middle one), and up to
 25 come up instead of 10. The modeled player gets about 8 in mission 10, a
-short battle, about 22 in the Kraken and about 12 in the Maelstrom
+short battle, about 21 in the Kraken and about 12 in the Maelstrom
 (`SUPER_FLOOR`, `SUPER_BAR` and `MAX_PER_SUPER_MISSION` in `seabattle/boost.py`).
 
 **Turning it off.** The **Turn off** button by "MATH BOOST ON" in the side
@@ -512,11 +516,11 @@ its topic and level:
 The missions are balanced without Math Boost, so it makes them easier. The
 big hits carry about half of a battle's damage, so the boosts count, most of
 all in the super missions: with 80% of its boost problems right, the modeled
-player wins super missions 10 and 20 at the first try 73-86% of the time
+player wins super missions 10 and 20 at the first try 66-86% of the time
 instead of 21-48%, and needs about 19 workshop problems per mission won
-instead of 22-23 (`python -m seabattle.balance --boost 0.8`, seeds 1 and 2).
-The Maelstrom gains least: 38-61% at the first try, against 46-48% without.
-Guessing every answer (`--boost 0.25`) gives 22-24 problems per mission won,
+instead of 22 (`python -m seabattle.balance --boost 0.8`, seeds 1 and 2).
+The Maelstrom gains least: 42-59% at the first try, against 44-49% without.
+Guessing every answer (`--boost 0.25`) gives 23 problems per mission won,
 the same as with Math Boost off within the model's noise.
 
 ### The debrief
@@ -719,10 +723,10 @@ that's where most of the boosts are. Six seeds (16 players each, Math Boost off)
 | Super mission | First try | Tries |
 | --- | --- | --- |
 | 10, Cruiser Squadron | 21-48% | 1.6-2.2 |
-| 20, The Kraken | 28-66% | 1.3-2.6 |
-| 30, The Maelstrom | 25-48% | 2.9-5.2 |
+| 20, The Kraken | 23-65% | 1.2-2.8 |
+| 30, The Maelstrom | 28-49% | 2.8-4.9 |
 
-The other missions come in at 72-100% first try, Act III's included: its fleets
+The other missions come in at 77-100% first try, Act III's included: its fleets
 are sized for a player who has beaten the Kraken, so each one costs a fifth to
 a half of the fleet's hull. Two rules keep a lost mission from becoming a wall:
 the dockyards repair half the ships a lost battle sinks, and half the Red ships
