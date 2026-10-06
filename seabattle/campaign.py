@@ -161,9 +161,9 @@ _MISSIONS = [
     ("Cruiser Sighted", "Red light cruisers lead this squadron. Their 6-inch guns outrange yours.",
      [("light_cruiser", 2), ("destroyer", 4), ("picket", 7)], {}),
     ("The Iron Wall", "Red's ships now carry thicker armor. Light guns will bounce off.",
-     [("light_cruiser", 2), ("destroyer", 6)], {"belt": 1, "armor": 1}),
+     [("light_cruiser", 2), ("destroyer", 5)], {"belt": 1, "armor": 1}),
     ("Wolf Pack", "Two packs of torpedo boats with bigger warheads. Keep your distance, or shoot them down.",
-     [("torpedo_boat", 7), ("torpedo_boat", 7), ("destroyer", 2)], {"warheads": 1, "tubes": 1}),
+     [("torpedo_boat", 6), ("torpedo_boat", 6), ("destroyer", 2)], {"warheads": 1, "tubes": 1}),
     ("Battleship!", "A Red battleship has left port. Its 12-inch guns can sink anything you own.",
      [("battleship", 1), ("destroyer", 3)], {"fire_control": 1}),
     ("Cruiser Squadron", "Red's whole cruiser squadron is hunting your fleet: three light cruisers, with destroyers "
