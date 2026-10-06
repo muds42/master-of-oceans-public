@@ -191,9 +191,9 @@ _MISSIONS = [
     ("Siege of Red Harbor", "You have reached Red's home harbor. A Leviathan and two battleships guard the entrance, "
      "with every cruiser and destroyer in port.",
      [("leviathan", 1), ("battleship", 2), ("light_cruiser", 2), ("destroyer", 4)], {}),
-    ("The Kraken", "The Kraken, Red's floating fortress, sails out with its last dreadnought, its last Leviathan "
-     "and its last destroyer. Sink it, and its wreck may hold Red's last secrets.",
-     [("kraken", 1), ("dreadnought", 1), ("leviathan", 1), ("destroyer", 1)], {"belt": 2, "fire_control": 2, "interdiction": 2}),
+    ("The Kraken", "The Kraken, Red's floating fortress, sails out with its last dreadnought and its last "
+     "Leviathan. Sink it, and its wreck may hold Red's last secrets.",
+     [("kraken", 1), ("dreadnought", 1), ("leviathan", 1)], {"belt": 2, "fire_control": 2, "interdiction": 2}),
     # Act III: Red fields future tech, one new technology a mission.
     ("Salvage Rights", "The Kraken's escorts are back to claim its wreck, and whatever Red was building inside it.",
      [("battleship", 3), ("missile_cruiser", 5), ("light_cruiser", 4), ("destroyer", 9)], {}),
@@ -214,9 +214,9 @@ _MISSIONS = [
      [("leviathan_mk2", 1), ("destroyer", 9), ("torpedo_boat", 13), ("light_cruiser", 2)], {"graviton": 1, "lasers": 3}),
     ("The Gauntlet", "The Tempest and a Leviathan Mk II together, with every trick Red has learned.",
      [("tempest", 1), ("leviathan_mk2", 1), ("destroyer", 6), ("light_cruiser", 2)], {"fields": 3, "decoys": 2}),
-    ("The Maelstrom", "The Maelstrom, a sea fortress armed with everything Red knows, comes for you with three "
-     "Leviathan Mk IIs. Win this and the sea is yours.",
-     [("maelstrom", 1), ("leviathan_mk2", 3)],
+    ("The Maelstrom", "The Maelstrom, a sea fortress armed with everything Red knows, comes for you with two "
+     "Leviathan Mk IIs and a screen of destroyers. Win this and the sea is yours.",
+     [("maelstrom", 1), ("leviathan_mk2", 2), ("destroyer", 6)],
      {"fields": 4, "ion": 2, "plasma_torps": 2, "decoys": 3, "railguns": 2, "point_defense": 2, "graviton": 2}),
 ]
 ACTS = (1, 11, 21)  # the first missions of Act I, Act II and Act III

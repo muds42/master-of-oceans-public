@@ -333,8 +333,8 @@ opens the next:
 | # | Super mission | Red's fleet | Winning it opens |
 | --- | --- | --- | --- |
 | 10 | Cruiser Squadron | 3 light cruisers, 6 destroyers, 6 picket boats | Act II, and Plasma: future tech, retrofits and two new math topics |
-| 20 | The Kraken | the Kraken, a dreadnought, a Leviathan and a destroyer | Act III, and all three Plasma ship classes |
-| 30 | The Maelstrom | the Maelstrom and 3 Leviathan Mk IIs, with Red's tech at its strongest | the endless patrols: the sea is yours |
+| 20 | The Kraken | the Kraken, a dreadnought and a Leviathan | Act III, and all three Plasma ship classes |
+| 30 | The Maelstrom | the Maelstrom, 2 Leviathan Mk IIs and 6 destroyers, with Red's tech at its strongest | the endless patrols: the sea is yours |
 
 * They are Red's biggest fleets yet, much harder than the missions around
   them (harder than the mission after, too), and longer battles. Spend extra
@@ -378,7 +378,7 @@ opens the next:
   | 27 | Rail Line | Railguns, Point-Defense Lasers | Railguns halve your belts, so fields do more of the defending |
   | 28 | Graviton Storm | Graviton Beams | Overkill runs through your stacks: big stacks of small boats suffer most |
   | 29 | The Gauntlet | stronger fields and decoys | Everything at once |
-  | 30 | The Maelstrom | everything, at its strongest | The finale, a super mission: the Maelstrom and three Leviathan Mk IIs |
+  | 30 | The Maelstrom | everything, at its strongest | The finale, a super mission: the Maelstrom, two Leviathan Mk IIs and six destroyers |
 
   Act III brings three new super ships:
 
